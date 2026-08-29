@@ -513,7 +513,7 @@ Gemini APIは本リリースで導入するが、店舗選びやスコアリン�
 そこは自分でルールを決めて実装し、Gemini APIには「なぜこのお店がおすすめなのか」を分かりやすく伝えてもらう役割を持たせる。
 
 ### 画面遷移図
-Figma：<https://www.figma.com/design/2JlgowKvFpkbRd40AKHpuW/food_match_%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0-1&p=f&t=jTimnnV2vjAjCS6e-0>
+Figma：<https://www.figma.com/design/j8iNK8vEIoP1t7WFcDijdS/food_match_%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0-1&t=MdVMiumZjxuRLcGA-1>
 
 ### 本サービスの概要（700文字以内）
 FoodMatchは、複数人で食事をするときの「どこでもいい」でお店がなかなか決まらない問題を解決するサービス。
