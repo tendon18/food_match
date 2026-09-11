@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  root "users#new"
+  get "home/top"
+  root "home#top"
 
   resources :users, only: [ :new, :create ]
   resource :session, only: [ :new, :create, :destroy ]

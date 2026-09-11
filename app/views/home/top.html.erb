@@ -1,0 +1,26 @@
+<div class="top-page">
+  <h1>FoodMatch</h1>
+
+  <p>
+    複数人での食事で「どこでもいい」で
+    話が止まってしまう問題を解決するサービスです。
+  </p>
+
+  <%= link_to "新規作成", "#", class: "button" %>
+
+  <%= link_to "新規登録", new_user_path, class: "button" %>
+
+  <%= link_to "ログイン", new_session_path, class: "button" %>
+
+  <div class="terms">
+    <label>
+      <%= check_box_tag :terms %>
+      利用規約に同意する
+    </label>
+
+    <label>
+      <%= check_box_tag :privacy_policy %>
+      プライバシーポリシーに同意する
+    </label>
+  </div>
+</div>
