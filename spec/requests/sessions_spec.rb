@@ -5,13 +5,13 @@ RSpec.describe "Sessions", type: :request do
 
   describe "POST /sessions (create)" do
     context "メールアドレスとパスワードが正しい場合" do
-      it "ログインに成功しグループ作成画面へリダイレクトする" do
+      it "ログインに成功しグループ一覧へリダイレクトする" do
         post session_path, params: {
           email: user.email,
           password: "password"
         }
 
-        expect(response).to redirect_to(new_group_path)
+        expect(response).to redirect_to(groups_path)
       end
     end
 

@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
   def create
     @user = login(params[:email], params[:password])
     if @user
-      redirect_to new_group_path
+      redirect_to groups_path
     else
       flash.now[:alert] = "メールアドレスまたはパスワードが正しくありません"
       render :new
