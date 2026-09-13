@@ -1,0 +1,12 @@
+<h1>グループ作成</h1>
+
+<p>グループ名を入力してください。</p>
+
+<%= form_with model: @group do |f| %>
+  <div>
+    <%= f.label :name, "グループ名" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <%= f.submit "グループを作成する" %>
+<% end %>

@@ -9,7 +9,7 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "POST /users" do
-    it "creates a user and redirects to root" do
+    it "creates a user and redirects to group creation" do
       post "/users", params: {
         user: {
           email: "test2@example.com",
@@ -18,7 +18,7 @@ RSpec.describe "Users", type: :request do
         }
       }
 
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_group_path)
     end
   end
 end

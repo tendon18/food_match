@@ -1,24 +1,24 @@
 require "rails_helper"
 
 RSpec.describe "Sessions", type: :request do
-  let(:user) { create(:user) } # password は 'password' などにしておく
+  let(:user) { create(:user) }
 
   describe "POST /sessions (create)" do
     context "メールアドレスとパスワードが正しい場合" do
-      it "ログインに成功しroot_pathへリダイレクトする" do
+      it "ログインに成功しグループ作成画面へリダイレクトする" do
         post session_path, params: {
           email: user.email,
           password: "password"
         }
 
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_group_path)
       end
     end
 
     context "メールアドレスまたはパスワードが誤っている場合" do
       it "ログインに失敗しnewテンプレートを再表示する" do
         post session_path, params: { email: user.email, password: "wrong_password" }
-        expect(response).to have_http_status(:success) # render :new はデフォルトで200
+        expect(response).to have_http_status(:success)
       end
     end
   end
