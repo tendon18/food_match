@@ -1,0 +1,13 @@
+<h1>グループ一覧</h1>
+
+<% if @groups.any? %>
+  <% @groups.each do |group| %>
+    <div>
+      <%= link_to group.name, group_path(group) %>
+    </div>
+  <% end %>
+<% else %>
+  <p>グループがありません</p>
+<% end %>
+
+<%= link_to "グループを作成する", new_group_path %>

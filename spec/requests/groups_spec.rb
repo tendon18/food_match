@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "Groups", type: :request do
   describe "GET /new" do
@@ -31,6 +31,21 @@ RSpec.describe "Groups", type: :request do
       expect(group_member.group).to eq(group)
       expect(group_member.user).to eq(user)
       expect(group_member.role).to eq("organizer")
+    end
+  end
+
+  describe "GET /groups" do
+    let(:user) { create(:user) }
+
+    it "ログインユーザーのグループ一覧を表示する" do
+      post session_path, params: {
+        email: user.email,
+        password: "password"
+      }
+
+      get groups_path
+
+      expect(response).to have_http_status(:success)
     end
   end
 end

@@ -1,4 +1,8 @@
 class GroupsController < ApplicationController
+  def index
+    @groups = current_user.groups
+  end
+
   def new
     @group = Group.new
   end
@@ -12,10 +16,14 @@ class GroupsController < ApplicationController
         role: "organizer"
       )
 
-      redirect_to root_path
+      redirect_to groups_path
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def show
+    @group = Group.find(params[:id])
   end
 
   private
