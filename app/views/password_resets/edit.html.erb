@@ -1,0 +1,19 @@
+<h1>パスワード再設定</h1>
+
+<p>新しいパスワードを入力してください。</p>
+
+<%= form_with url: password_reset_path(params[:id]), method: :patch do |form| %>
+  <div>
+    <%= form.label :password, "新しいパスワード" %>
+    <%= form.password_field :password, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :password_confirmation, "パスワード確認" %>
+    <%= form.password_field :password_confirmation, required: true %>
+  </div>
+
+  <div>
+    <%= form.submit "パスワードを変更する" %>
+  </div>
+<% end %>

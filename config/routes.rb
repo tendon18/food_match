@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [ :new, :create ]
   resource :session, only: [ :new, :create, :destroy ]
+  resources :password_resets, only: [:new, :create, :edit, :update]
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
