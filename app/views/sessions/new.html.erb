@@ -1,6 +1,6 @@
 <h1>ログイン</h1>
 
-<%= form_with url: session_path, local: true do |f| %>
+<%= form_with url: session_path, local: true, data: { turbo: false } do |f| %>
   <div>
     <%= f.label :email, "メールアドレス" %>
     <%= f.text_field :email %>
