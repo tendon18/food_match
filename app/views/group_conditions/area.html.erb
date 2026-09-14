@@ -1,0 +1,57 @@
+<h1>グループ作成 Step 1</h1>
+
+<p>どこに集まりますか？</p>
+
+<p>食事をするエリアを最大3つまで選んでください。</p>
+
+<%= form_with url: save_group_conditions_area_path(@group),
+              method: :post,
+              local: true do |f| %>
+
+  <div>
+    <%= select_tag "areas[]",
+        options_for_select(@areas),
+        include_blank: "エリアを選択してください",
+        class: "area-select" %>
+  </div>
+
+  <div>
+    <%= select_tag "areas[]",
+        options_for_select(@areas),
+        include_blank: "エリアを選択してください",
+        class: "area-select" %>
+  </div>
+
+  <div>
+    <%= select_tag "areas[]",
+        options_for_select(@areas),
+        include_blank: "エリアを選択してください",
+        class: "area-select" %>
+  </div>
+
+  <%= f.submit "次へ進む" %>
+<% end %>
+
+<script>
+  const areaSelects = document.querySelectorAll(".area-select");
+
+  areaSelects.forEach((select) => {
+    select.addEventListener("change", () => {
+      const selectedValues = Array.from(areaSelects)
+        .map((select) => select.value)
+        .filter((value) => value !== "");
+
+      areaSelects.forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          if (option.value === "") {
+            return;
+          }
+
+          option.disabled =
+            selectedValues.includes(option.value) &&
+            option.value !== select.value;
+        });
+      });
+    });
+  });
+</script>

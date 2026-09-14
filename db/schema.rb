@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_13_151135) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_14_050411) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "group_areas", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.string "area"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_areas_on_group_id"
+  end
+
+  create_table "group_genres", force: :cascade do |t|
+    t.bigint "group_id"
+    t.string "genre"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "group_members", force: :cascade do |t|
     t.bigint "group_id"
@@ -20,6 +35,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_13_151135) do
     t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "group_ng_conditions", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.string "condition"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_ng_conditions_on_group_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -45,4 +69,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_13_151135) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
   end
+
+  add_foreign_key "group_areas", "groups"
+  add_foreign_key "group_ng_conditions", "groups"
 end

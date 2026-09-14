@@ -16,6 +16,14 @@ RSpec.describe Group, type: :model do
       expect(association.macro).to eq(:has_many)
       expect(association.class_name).to eq("GroupMember")
     end
+
+    it "group_genresを複数持つ" do
+      association = described_class.reflect_on_association(:group_genres)
+
+      expect(association.macro).to eq(:has_many)
+      expect(association.class_name).to eq("GroupGenre")
+      expect(association.foreign_key).to eq("group_id")
+    end
   end
 
   describe "バリデーション" do

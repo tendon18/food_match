@@ -1,0 +1,57 @@
+<h1>グループ作成 Step 2</h1>
+
+<p>どんなジャンルを食べますか？</p>
+
+<p>食べたいジャンルを最大3つまで選んでください。</p>
+
+<%= form_with url: save_group_conditions_genre_path(@group),
+              method: :post,
+              local: true do |f| %>
+
+  <div>
+    <%= select_tag "genres[]",
+        options_for_select(@genres),
+        include_blank: "ジャンルを選択してください",
+        class: "genre-select" %>
+  </div>
+
+  <div>
+    <%= select_tag "genres[]",
+        options_for_select(@genres),
+        include_blank: "ジャンルを選択してください",
+        class: "genre-select" %>
+  </div>
+
+  <div>
+    <%= select_tag "genres[]",
+        options_for_select(@genres),
+        include_blank: "ジャンルを選択してください",
+        class: "genre-select" %>
+  </div>
+
+  <%= f.submit "次へ進む" %>
+<% end %>
+
+<script>
+  const genreSelects = document.querySelectorAll(".genre-select");
+
+  genreSelects.forEach((select) => {
+    select.addEventListener("change", () => {
+      const selectedValues = Array.from(genreSelects)
+        .map((select) => select.value)
+        .filter((value) => value !== "");
+
+      genreSelects.forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          if (option.value === "") {
+            return;
+          }
+
+          option.disabled =
+            selectedValues.includes(option.value) &&
+            option.value !== select.value;
+        });
+      });
+    });
+  });
+</script>

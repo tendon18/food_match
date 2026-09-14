@@ -1,0 +1,27 @@
+<h1>グループ作成 Step 4</h1>
+
+<p>避けたい条件を選んでください。</p>
+
+<p>複数選択できます。</p>
+
+<%= form_with url: save_group_conditions_ng_path(@group),
+              method: :post,
+              local: true do |f| %>
+
+  <div>
+    <%= check_box_tag "conditions[]", "spicy" %>
+    <%= label_tag "conditions_spicy", "辛いもの" %>
+  </div>
+
+  <div>
+    <%= check_box_tag "conditions[]", "smoking" %>
+    <%= label_tag "conditions_smoking", "喫煙" %>
+  </div>
+
+  <div>
+    <%= check_box_tag "conditions[]", "noisy" %>
+    <%= label_tag "conditions_noisy", "騒がしい" %>
+  </div>
+
+  <%= f.submit "次へ進む" %>
+<% end %>

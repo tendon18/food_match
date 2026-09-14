@@ -18,4 +18,18 @@ RSpec.describe GroupMember, type: :model do
       expect(association.foreign_key).to eq("user_id")
     end
   end
+
+  describe "#organizer?" do
+    it "roleがorganizerならtrueを返す" do
+      group_member = build(:group_member, role: "organizer")
+
+      expect(group_member.organizer?).to be true
+    end
+
+    it "roleがorganizer以外ならfalseを返す" do
+      group_member = build(:group_member, role: "member")
+
+      expect(group_member.organizer?).to be false
+    end
+  end
 end

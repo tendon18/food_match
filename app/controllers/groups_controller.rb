@@ -16,7 +16,7 @@ class GroupsController < ApplicationController
         role: "organizer"
       )
 
-      redirect_to groups_path
+      redirect_to group_conditions_area_path(@group)
     else
       render :new, status: :unprocessable_entity
     end
