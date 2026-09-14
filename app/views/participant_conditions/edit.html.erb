@@ -1,0 +1,80 @@
+<h1>希望条件を編集</h1>
+
+<h2>
+  <%= @group.name %>
+</h2>
+
+<%= form_with url: update_participant_condition_path(@group, @group_member),
+              method: :patch,
+              local: true do |f| %>
+
+  <h3>① どのあたりで食べたいですか？</h3>
+
+  <% @group_areas.each do |area| %>
+    <div>
+      <%= check_box_tag "area_ids[]",
+                        area.id,
+                        @participant_condition.group_areas.include?(area) %>
+      <%= area.area %>
+    </div>
+  <% end %>
+
+  <p>※複数選択可</p>
+
+  <h3>② どんな気分の食事？</h3>
+
+  <% @group_genres.each do |genre| %>
+    <div>
+      <%= check_box_tag "genre_ids[]",
+                        genre.id,
+                        @participant_condition.group_genres.include?(genre) %>
+      <%= genre.genre %>
+    </div>
+  <% end %>
+
+  <p>※複数選択可</p>
+
+  <h3>③ 予算の目安は？</h3>
+
+  <div>
+    <%= radio_button_tag :budget, 2000, @participant_condition.budget == 2000 %>
+    〜2,000円
+  </div>
+
+  <div>
+    <%= radio_button_tag :budget, 3000, @participant_condition.budget == 3000 %>
+    〜3,000円
+  </div>
+
+  <div>
+    <%= radio_button_tag :budget, 4000, @participant_condition.budget == 4000 %>
+    〜4,000円
+  </div>
+
+  <div>
+    <%= radio_button_tag :budget, 5000, @participant_condition.budget == 5000 %>
+    〜5,000円
+  </div>
+
+  <div>
+    <%= radio_button_tag :budget, 6000, @participant_condition.budget == 6000 %>
+    6,000円以上
+  </div>
+  
+  <h3>④ 避けたいもの・条件は？</h3>
+
+  <% @group_avoid_conditions.each do |avoid| %>
+    <div>
+      <%= check_box_tag "avoid_condition_ids[]",
+                        avoid.id,
+                        @participant_condition.group_avoid_conditions.include?(avoid) %>
+      <%= avoid.condition %>
+    </div>
+  <% end %>
+
+  <p>※複数選択可</p>
+
+  <br>
+
+  <%= f.submit "更新する" %>
+<% end %>

@@ -56,8 +56,16 @@ Rails.application.routes.draw do
     as: :new_participant_condition
 
   post "/groups/:group_id/participant_conditions/:group_member_id",
-  to: "participant_conditions#create",
-  as: :create_participant_condition
+    to: "participant_conditions#create",
+    as: :create_participant_condition
+
+  get "/groups/:group_id/participant_conditions/:group_member_id/edit",
+    to: "participant_conditions#edit",
+    as: :edit_participant_condition
+
+  patch "/groups/:group_id/participant_conditions/:group_member_id",
+    to: "participant_conditions#update",
+    as: :update_participant_condition
 
   get "/groups/:group_id/participant_conditions/:group_member_id/complete",
     to: "participant_conditions#complete",

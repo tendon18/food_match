@@ -38,6 +38,9 @@ class GroupsController < ApplicationController
     )
 
     redirect_to new_participant_condition_path(@group, group_member)
+  rescue ActiveRecord::RecordNotUnique
+    flash.now[:alert] = "※このニックネームはすでに参加しています"
+    render :join, status: :unprocessable_entity
   end
 
   def invitation
