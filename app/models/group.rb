@@ -5,4 +5,12 @@ class Group < ApplicationRecord
   has_many :group_areas
   has_many :group_ng_conditions
   validates :name, presence: true
+
+  before_create :generate_invite_token
+
+  private
+
+  def generate_invite_token
+    self.invite_token = SecureRandom.hex(16)
+  end
 end

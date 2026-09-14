@@ -86,7 +86,7 @@ class GroupConditionsController < ApplicationController
       )
     end
 
-    redirect_to group_path(@group)
+    redirect_to group_invitation_path(@group)
   end
 
   private

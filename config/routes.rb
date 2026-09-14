@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   resources :password_resets, only: [:new, :create, :edit, :update]
   resources :groups, only: [:index, :new, :create, :show]
 
+  get "/groups/:group_id/invitation",
+    to: "groups#invitation",
+    as: :group_invitation
+
   get "/groups/:group_id/conditions/area",
     to: "group_conditions#area",
     as: :group_conditions_area

@@ -26,6 +26,10 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
   end
 
+  def invitation
+    @group = Group.find(params[:group_id])
+  end
+
   private
 
   def group_params
