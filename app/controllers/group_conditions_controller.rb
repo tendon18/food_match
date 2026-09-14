@@ -1,4 +1,7 @@
 class GroupConditionsController < ApplicationController
+  before_action :set_group
+  before_action :require_organizer
+
   TOKYO_AREAS = [
     "新宿",
     "渋谷",
@@ -20,15 +23,14 @@ class GroupConditionsController < ApplicationController
     "居酒屋",
     "カフェ"
   ].freeze
+
   # Step 1
   def area
-    @group = Group.find(params[:group_id])
     @areas = TOKYO_AREAS
   end
+
   # Step 1 保存
   def save_area
-    @group = Group.find(params[:group_id])
-
     @group.group_areas.destroy_all
 
     params[:areas].each do |area|
@@ -39,15 +41,14 @@ class GroupConditionsController < ApplicationController
 
     redirect_to group_conditions_genre_path(@group)
   end
+
   # Step 2
   def genre
-    @group = Group.find(params[:group_id])
     @genres = GENRES
   end
+
   # Step 2 保存
   def save_genre
-    @group = Group.find(params[:group_id])
-
     @group.group_genres.destroy_all
 
     params[:genres].each do |genre|
@@ -58,26 +59,24 @@ class GroupConditionsController < ApplicationController
 
     redirect_to group_conditions_budget_path(@group)
   end
+
   # Step 3
   def budget
-    @group = Group.find(params[:group_id])
   end
+
   # Step 3 保存
   def save_budget
-    @group = Group.find(params[:group_id])
-
     @group.update!(budget: params[:budget])
 
     redirect_to group_conditions_ng_path(@group)
   end
+
   # Step 4
   def ng
-    @group = Group.find(params[:group_id])
   end
+
   # Step 4 保存
   def save_ng
-    @group = Group.find(params[:group_id])
-
     @group.group_ng_conditions.destroy_all
 
     params[:conditions]&.each do |condition|
@@ -88,5 +87,17 @@ class GroupConditionsController < ApplicationController
     end
 
     redirect_to group_path(@group)
+  end
+
+  private
+
+  def set_group
+    @group = Group.find(params[:group_id])
+  end
+
+  def require_organizer
+    return if @group.creator == current_user
+
+    redirect_to group_path(@group), alert: "幹事のみ設定を変更できます"
   end
 end
