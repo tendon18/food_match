@@ -1,0 +1,75 @@
+<%= form_with url: create_participant_condition_path(@group, @group_member), method: :post, local: true do |f| %>
+
+<h1>あなたの希望を教えてください</h1>
+
+<h2>
+  <%= @group.name %>
+</h2>
+
+<h3>① どのあたりで食べたいですか？</h3>
+
+<% @group_areas.each do |area| %>
+  <div>
+    <%= check_box_tag "area_ids[]", area.id %>
+    <%= area.area %>
+  </div>
+<% end %>
+
+<p>※複数選択可</p>
+
+
+<h3>② どんな気分の食事？</h3>
+
+<% @group_genres.each do |genre| %>
+  <div>
+    <%= check_box_tag "genre_ids[]", genre.id %>
+    <%= genre.genre %>
+  </div>
+<% end %>
+
+<p>※複数選択可</p>
+
+
+<h3>③ 予算の目安は？</h3>
+
+<div>
+  <%= radio_button_tag :budget, 2000 %>
+  〜2,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 3000 %>
+  〜3,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 4000 %>
+  〜4,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 5000 %>
+  〜5,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 6000 %>
+  6,000円以上
+</div>
+
+
+<h3>④ 避けたいもの・条件は？</h3>
+
+<% @group_avoid_conditions.each do |avoid| %>
+  <div>
+    <%= check_box_tag "avoid_condition_ids[]", avoid.id %>
+    <%= avoid.condition %>
+  </div>
+<% end %>
+
+
+<br>
+
+<%= f.submit "回答を完了する" %>
+
+<% end %>

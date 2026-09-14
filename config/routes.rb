@@ -11,6 +11,14 @@ Rails.application.routes.draw do
     to: "groups#invitation",
     as: :group_invitation
 
+  get "/groups/join/:invite_token",
+    to: "groups#join",
+    as: :join_group
+
+  post "/groups/join/:invite_token",
+    to: "groups#join_create",
+    as: :join_group_create
+
   get "/groups/:group_id/conditions/area",
     to: "group_conditions#area",
     as: :group_conditions_area
@@ -42,6 +50,18 @@ Rails.application.routes.draw do
   post "/groups/:group_id/conditions/ng",
     to: "group_conditions#save_ng",
     as: :save_group_conditions_ng
+
+  get "/groups/:group_id/participant_conditions/:group_member_id",
+    to: "participant_conditions#new",
+    as: :new_participant_condition
+
+  post "/groups/:group_id/participant_conditions/:group_member_id",
+  to: "participant_conditions#create",
+  as: :create_participant_condition
+
+  get "/groups/:group_id/participant_conditions/:group_member_id/complete",
+    to: "participant_conditions#complete",
+    as: :participant_condition_complete
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

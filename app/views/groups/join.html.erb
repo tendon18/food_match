@@ -1,0 +1,28 @@
+<h1><%= @group.name %></h1>
+
+<p>
+  このグループに参加します。
+</p>
+
+<p>
+  みんなでお店を決めよう！
+</p>
+
+<%= form_with url: join_group_create_path(@group.invite_token), method: :post, local: true do |f| %>
+  <div>
+    <%= f.label :nickname, "ニックネーム" %>
+    <br>
+    <%= f.text_field :nickname %>
+    <br><br>
+
+    <%= check_box_tag :terms %>
+    <%= label_tag :terms, "利用規約に同意する" %>
+  </div>
+
+  <div>
+    <%= check_box_tag :privacy_policy %>
+    <%= label_tag :privacy_policy, "プライバシーポリシーに同意する" %>
+  </div>
+
+  <%= f.submit "グループに参加する" %>
+<% end %>

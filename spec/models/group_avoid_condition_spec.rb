@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe GroupNgCondition, type: :model do
+RSpec.describe GroupAvoidCondition, type: :model do
   describe "関連付け" do
     it "groupに属する" do
       association = described_class.reflect_on_association(:group)

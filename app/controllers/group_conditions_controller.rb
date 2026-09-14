@@ -77,10 +77,10 @@ class GroupConditionsController < ApplicationController
 
   # Step 4 保存
   def save_ng
-    @group.group_ng_conditions.destroy_all
+    @group.group_avoid_conditions.destroy_all
 
     params[:conditions]&.each do |condition|
-      @group.group_ng_conditions.create!(
+      @group.group_avoid_conditions.create!(
         condition: condition,
         status: "avoid"
       )

@@ -26,6 +26,20 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
   end
 
+  def join
+    @group = Group.find_by!(invite_token: params[:invite_token])
+  end
+
+  def join_create
+    @group = Group.find_by!(invite_token: params[:invite_token])
+
+    group_member = @group.group_members.create!(
+      nickname: params[:nickname]
+    )
+
+    redirect_to new_participant_condition_path(@group, group_member)
+  end
+
   def invitation
     @group = Group.find(params[:group_id])
   end
