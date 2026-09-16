@@ -86,6 +86,31 @@ class GroupConditionsController < ApplicationController
       )
     end
 
+    group_member = @group.group_members.find_by!(user: current_user)
+
+    participant_condition = ParticipantCondition.create!(
+      group_member: group_member,
+      budget: @group.budget
+    )
+
+    @group.group_genres.each do |group_genre|
+      participant_condition.participant_condition_genres.create!(
+        group_genre_id: group_genre.id
+      )
+    end
+
+    @group.group_areas.each do |group_area|
+      participant_condition.participant_condition_areas.create!(
+        group_area_id: group_area.id
+      )
+    end
+
+    @group.group_avoid_conditions.each do |group_avoid_condition|
+      participant_condition.participant_condition_avoids.create!(
+        group_avoid_condition_id: group_avoid_condition.id
+      )
+    end
+
     redirect_to group_invitation_path(@group)
   end
 
