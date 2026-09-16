@@ -21,7 +21,8 @@ RSpec.describe "Groups", type: :request do
         post groups_path, params: {
           group: {
             name: "テストグループ"
-          }
+          },
+          nickname: "テスト幹事"
         }
       }.to change(GroupMember, :count).by(1)
 
@@ -31,6 +32,7 @@ RSpec.describe "Groups", type: :request do
       expect(group_member.group).to eq(group)
       expect(group_member.user).to eq(user)
       expect(group_member.role).to eq("organizer")
+      expect(group_member.nickname).to eq("テスト幹事")
     end
   end
 

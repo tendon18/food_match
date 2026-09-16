@@ -13,7 +13,8 @@ class GroupsController < ApplicationController
     if @group.save
       @group.group_members.create!(
         user: current_user,
-        role: "organizer"
+        role: "organizer",
+        nickname: params[:nickname]
       )
 
       redirect_to group_conditions_area_path(@group)

@@ -8,5 +8,11 @@
     <%= f.text_field :name %>
   </div>
 
+  <div>
+    <p>あなたのニックネームを入力してください</p>
+    <%= text_field_tag :nickname %>
+    <p>※このニックネームは、今後グループの参加者のみんなに表示されます。</p>
+  </div>
+
   <%= f.submit "グループを作成する" %>
 <% end %>

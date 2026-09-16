@@ -5,10 +5,44 @@
 </p>
 
 <p>
-  次は、みんなで行きたいお店を候補に追加しましょう。
+  次は、みんなで行きたいお店を
+  候補に追加しましょう。
+</p>
+
+<p>
+  「ここに行きたい！」と思うお店を
+  1店舗以上追加してください。
+</p>
+
+<h2>現在の参加者</h2>
+
+<% @group_members.each do |group_member| %>
+  <div>
+    <% if group_member.participant_condition.present? %>
+      ✓
+    <% else %>
+      ○
+    <% end %>
+
+    <%= group_member.nickname %>
+  </div>
+<% end %>
+
+<p>
+  ※ ✓ は条件入力済み、○ は未入力
+</p>
+
+<p>
+  全員の条件と候補が集まると、<br>
+  おすすめのお店を確認できます。
 </p>
 
 <div>
   <%= link_to "候補店舗を追加する",
               "#" %>
+</div>
+
+<div>
+  <%= link_to "希望条件を編集",
+              edit_participant_condition_path(@group, @group_member) %>
 </div>

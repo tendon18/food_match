@@ -4,6 +4,8 @@ class GroupMember < ApplicationRecord
 
   has_one :participant_condition
 
+  validates :nickname, presence: true
+
   def organizer?
     role == "organizer"
   end

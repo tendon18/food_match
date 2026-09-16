@@ -91,5 +91,7 @@ class ParticipantConditionsController < ApplicationController
 
   def complete
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
+    @group_members = @group.group_members
   end
 end

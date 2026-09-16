@@ -3,5 +3,6 @@ FactoryBot.define do
     association :group
     association :user
     role { "member" }
+    nickname { "テストユーザー" }
   end
 end
