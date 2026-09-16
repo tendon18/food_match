@@ -7,20 +7,19 @@
 <%= form_with url: save_group_conditions_ng_path(@group),
               method: :post,
               local: true do |f| %>
-
   <div>
-    <%= check_box_tag "conditions[]", "spicy" %>
-    <%= label_tag "conditions_spicy", "辛いもの" %>
+    <%= check_box_tag "conditions[]", "辛い料理" %>
+    <%= label_tag "conditions_spicy", "辛い料理" %>
   </div>
 
   <div>
-    <%= check_box_tag "conditions[]", "smoking" %>
-    <%= label_tag "conditions_smoking", "喫煙" %>
+    <%= check_box_tag "conditions[]", "喫煙可能なお店" %>
+    <%= label_tag "conditions_smoking", "喫煙可能なお店" %>
   </div>
 
   <div>
-    <%= check_box_tag "conditions[]", "noisy" %>
-    <%= label_tag "conditions_noisy", "騒がしい" %>
+    <%= check_box_tag "conditions[]", "騒がしいお店" %>
+    <%= label_tag "conditions_noisy", "騒がしいお店" %>
   </div>
 
   <%= f.submit "次へ進む" %>
