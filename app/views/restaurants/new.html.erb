@@ -1,0 +1,96 @@
+<%= form_with model: @restaurant, url: group_restaurants_path(@group), method: :post, local: true do |f| %>
+
+<h1>気になる店舗を追加</h1>
+
+<p>
+  みんなで行きたいお店の<br>
+  候補を持ち寄りましょう。
+</p>
+
+<p>
+  あなたが気になるお店を<br>
+  1店舗ずつ追加できます。
+</p>
+
+
+<h3>店舗名</h3>
+
+<div>
+  <%= f.text_field :name %>
+</div>
+
+
+<h3>予算</h3>
+
+<div>
+  <%= radio_button_tag :budget, 2000 %>
+  〜2,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 3000 %>
+  〜3,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 4000 %>
+  〜4,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 5000 %>
+  〜5,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 6000 %>
+  6,000円以上
+</div>
+
+
+<h3>ジャンル</h3>
+
+<% @group_genres.each do |genre| %>
+  <div>
+    <%= radio_button_tag :group_genre_id, genre.id %>
+    <%= genre.genre %>
+  </div>
+<% end %>
+
+
+<h3>エリア</h3>
+
+<% @group_areas.each do |area| %>
+  <div>
+    <%= radio_button_tag :group_area_id, area.id %>
+    <%= area.area %>
+  </div>
+<% end %>
+
+
+<h3>特徴（任意）</h3>
+
+<div>
+  <%= f.text_field :features %>
+</div>
+
+
+<h3>店舗URL（任意）</h3>
+
+<div>
+  <%= f.url_field :url %>
+</div>
+
+
+<h3>メモ（任意）</h3>
+
+<div>
+  <%= f.text_area :memo %>
+</div>
+
+
+<br>
+
+<%= f.submit "候補のお店を追加する" %>
+
+<% end %>

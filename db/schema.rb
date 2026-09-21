@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_14_104717) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_18_002205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -93,6 +93,34 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_14_104717) do
     t.index ["group_member_id"], name: "index_participant_conditions_on_group_member_id"
   end
 
+  create_table "restaurant_avoid_conditions", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.bigint "group_avoid_condition_id", null: false
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_avoid_condition_id"], name: "index_restaurant_avoid_conditions_on_group_avoid_condition_id"
+    t.index ["restaurant_id"], name: "index_restaurant_avoid_conditions_on_restaurant_id"
+  end
+
+  create_table "restaurants", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "added_by_id", null: false
+    t.bigint "group_genre_id", null: false
+    t.bigint "group_area_id", null: false
+    t.string "name", null: false
+    t.integer "budget", null: false
+    t.string "features"
+    t.string "url"
+    t.text "memo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["added_by_id"], name: "index_restaurants_on_added_by_id"
+    t.index ["group_area_id"], name: "index_restaurants_on_group_area_id"
+    t.index ["group_genre_id"], name: "index_restaurants_on_group_genre_id"
+    t.index ["group_id"], name: "index_restaurants_on_group_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "crypted_password"
@@ -116,4 +144,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_14_104717) do
   add_foreign_key "participant_condition_genres", "group_genres"
   add_foreign_key "participant_condition_genres", "participant_conditions"
   add_foreign_key "participant_conditions", "group_members"
+  add_foreign_key "restaurant_avoid_conditions", "group_avoid_conditions"
+  add_foreign_key "restaurant_avoid_conditions", "restaurants"
+  add_foreign_key "restaurants", "group_areas"
+  add_foreign_key "restaurants", "group_genres"
+  add_foreign_key "restaurants", "groups"
+  add_foreign_key "restaurants", "users", column: "added_by_id"
 end

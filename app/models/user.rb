@@ -9,4 +9,5 @@ class User < ApplicationRecord
            foreign_key: "creator_id"
   has_many :group_members
   has_many :groups, through: :group_members
+  has_many :restaurants, foreign_key: "added_by_id"
 end

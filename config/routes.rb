@@ -70,8 +70,26 @@ Rails.application.routes.draw do
   get "/groups/:group_id/participant_conditions/:group_member_id/complete",
     to: "participant_conditions#complete",
     as: :participant_condition_complete
+  
+  # 候補店舗追加画面
+  get "/groups/:group_id/restaurants/new",
+    to: "restaurants#new",
+    as: :new_restaurant
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # 候補店舗登録
+  post "/groups/:group_id/restaurants",
+    to: "restaurants#create",
+    as: :group_restaurants
+
+  # 候補店舗追加完了
+  get "/groups/:group_id/restaurants/:id/complete",
+    to: "restaurants#complete",
+    as: :restaurant_complete
+
+  # 候補店舗一覧
+  get "/groups/:group_id/restaurants",
+    to: "restaurants#index",
+    as: :group_restaurants_index
 
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

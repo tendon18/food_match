@@ -4,6 +4,7 @@ class Group < ApplicationRecord
   has_many :group_genres
   has_many :group_areas
   has_many :group_avoid_conditions
+  has_many :restaurants
   validates :name, presence: true
 
   before_create :generate_invite_token

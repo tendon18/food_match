@@ -1,0 +1,29 @@
+<h1>みんなが追加した店舗一覧</h1>
+
+<% @restaurants.each do |restaurant| %>
+  <div>
+    <h2><%= restaurant.name %></h2>
+
+    <p>
+      予算：
+      <%= restaurant.budget %>円
+    </p>
+
+    <p>
+      ジャンル：
+      <%= restaurant.group_genre.genre %>
+    </p>
+
+    <p>
+      エリア：
+      <%= restaurant.group_area.area %>
+    </p>
+
+    <p>
+      追加した人：
+      <%= restaurant.added_by.group_members.find_by(group: @group).nickname %>
+    </p>
+  </div>
+
+  <hr>
+<% end %>
