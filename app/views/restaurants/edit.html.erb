@@ -1,0 +1,89 @@
+<%= form_with url: update_restaurant_path(@group, @restaurant), method: :patch, local: true do |f| %>
+
+<%= hidden_field_tag :group_member_id, @group_member.id %>
+
+<h1>候補店舗を編集</h1>
+
+<h3>店舗名</h3>
+
+<div>
+  <%= text_field_tag :name, @restaurant.name %>
+</div>
+
+<h3>予算</h3>
+
+<div>
+  <%= radio_button_tag :budget, 2000, @restaurant.budget == 2000 %>
+  〜2,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 3000, @restaurant.budget == 3000 %>
+  〜3,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 4000, @restaurant.budget == 4000 %>
+  〜4,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 5000, @restaurant.budget == 5000 %>
+  〜5,000円
+</div>
+
+<div>
+  <%= radio_button_tag :budget, 6000, @restaurant.budget == 6000 %>
+  6,000円以上
+</div>
+
+<h3>ジャンル</h3>
+
+<% @group_genres.each do |genre| %>
+
+  <div>
+    <%= radio_button_tag :group_genre_id, genre.id, @restaurant.group_genre_id == genre.id %>
+    <%= genre.genre %>
+  </div>
+<% end %>
+
+<h3>エリア</h3>
+
+<% @group_areas.each do |area| %>
+
+  <div>
+    <%= radio_button_tag :group_area_id, area.id, @restaurant.group_area_id == area.id %>
+    <%= area.area %>
+  </div>
+<% end %>
+
+<h3>特徴（任意）</h3>
+
+<div>
+  <%= text_field_tag :features, @restaurant.features %>
+</div>
+
+<h3>店舗URL（任意）</h3>
+
+<div>
+  <%= url_field_tag :url, @restaurant.url %>
+</div>
+
+<h3>メモ（任意）</h3>
+
+<div>
+  <%= text_area_tag :memo, @restaurant.memo %>
+</div>
+
+<br>
+
+<%= f.submit "変更を保存する" %>
+
+<%= link_to "候補店舗詳細に戻る",
+            restaurant_path(
+              @group,
+              @restaurant,
+              group_member_id: @group_member.id
+            ) %>
+
+<% end %>

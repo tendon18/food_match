@@ -40,9 +40,21 @@
 </p>
 
 <p>
-  <%= link_to "候補店舗一覧に戻る", group_restaurants_index_path(@group) %>
+  <%= link_to "候補店舗一覧に戻る",
+              group_restaurants_index_path(
+                @group,
+                group_member_id: @group_member.id
+              ) %>
 </p>
 
-<p>
-  <%= link_to "候補店舗を編集する", edit_restaurant_path(@group, @restaurant) %>
-</p>
+
+<% if @restaurant.added_by == @group_member %>
+  <p>
+    <%= link_to "候補店舗を編集する",
+                edit_restaurant_path(
+                  @group,
+                  @restaurant,
+                  group_member_id: @group_member.id
+                ) %>
+  </p>
+<% end %>

@@ -96,6 +96,16 @@ Rails.application.routes.draw do
     to: "restaurants#show",
     as: :restaurant
 
+  # 候補店舗編集画面
+  get "/groups/:group_id/restaurants/:id/edit",
+   to: "restaurants#edit",
+   as: :edit_restaurant
+
+  # 候補店舗更新
+  patch "/groups/:group_id/restaurants/:id",
+    to: "restaurants#update",
+    as: :update_restaurant
+
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

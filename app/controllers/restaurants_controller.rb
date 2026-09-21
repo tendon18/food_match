@@ -26,7 +26,11 @@ class RestaurantsController < ApplicationController
       memo: params[:restaurant][:memo]
     )
 
-    redirect_to restaurant_complete_path(@group, restaurant)
+    redirect_to restaurant_complete_path(
+      @group,
+      restaurant,
+      group_member_id: group_member.id
+    )
   end
 
   def index
@@ -41,12 +45,22 @@ class RestaurantsController < ApplicationController
 
   def show
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
     @restaurant = @group.restaurants.find(params[:id])
   end
 
   def edit
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
     @restaurant = @group.restaurants.find(params[:id])
+
+    unless @restaurant.added_by == @group_member
+      redirect_to restaurant_path(
+        @group,
+        @restaurant,
+        group_member_id: @group_member.id
+      ) and return
+    end
 
     @group_genres = @group.group_genres
     @group_areas = @group.group_areas
@@ -54,7 +68,16 @@ class RestaurantsController < ApplicationController
 
   def update
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
     @restaurant = @group.restaurants.find(params[:id])
+
+    unless @restaurant.added_by == @group_member
+      redirect_to restaurant_path(
+        @group,
+        @restaurant,
+        group_member_id: @group_member.id
+      ) and return
+    end
 
     @restaurant.update!(
       name: params[:name],
@@ -66,6 +89,10 @@ class RestaurantsController < ApplicationController
       memo: params[:memo]
     )
 
-    redirect_to restaurant_path(@group, @restaurant)
+    redirect_to restaurant_path(
+      @group,
+      @restaurant,
+      group_member_id: @group_member.id
+    )
   end
 end

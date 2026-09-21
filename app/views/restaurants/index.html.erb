@@ -3,7 +3,12 @@
 <% @restaurants.each do |restaurant| %>
   <div>
     <h2>
-      <%= link_to restaurant.name, restaurant_path(@group, restaurant) %>
+      <%= link_to restaurant.name,
+                  restaurant_path(
+                    @group,
+                    restaurant,
+                    group_member_id: params[:group_member_id]
+                  ) %>
     </h2>
 
     <p>
