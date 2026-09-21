@@ -36,9 +36,13 @@
 
 <p>
   追加者：
-  <%= @restaurant.added_by.group_members.find_by(group: @group).nickname %>
+  <%= @restaurant.added_by.nickname %>
 </p>
 
 <p>
   <%= link_to "候補店舗一覧に戻る", group_restaurants_index_path(@group) %>
+</p>
+
+<p>
+  <%= link_to "候補店舗を編集する", edit_restaurant_path(@group, @restaurant) %>
 </p>

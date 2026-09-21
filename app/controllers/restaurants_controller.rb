@@ -1,6 +1,7 @@
 class RestaurantsController < ApplicationController
   def new
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
 
     @restaurant = Restaurant.new
 
@@ -11,9 +12,11 @@ class RestaurantsController < ApplicationController
   def create
     @group = Group.find(params[:group_id])
 
+    group_member = @group.group_members.find(params[:group_member_id])
+
     restaurant = Restaurant.create!(
       group: @group,
-      added_by: @group.group_members.find_by!(user: current_user),
+      added_by: group_member,
       name: params[:restaurant][:name],
       budget: params[:budget],
       group_genre_id: params[:group_genre_id],

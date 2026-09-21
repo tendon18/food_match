@@ -4,10 +4,12 @@ RSpec.describe "Restaurants", type: :request do
   describe "GET /new" do
     it "returns http success" do
       group = create(:group)
+      group_member = create(:group_member, group: group)
       create(:group_genre, group: group)
       create(:group_area, group: group)
 
-      get "/groups/#{group.id}/restaurants/new"
+      get "/groups/#{group.id}/restaurants/new",
+        params: { group_member_id: group_member.id }
 
       expect(response).to have_http_status(:success)
     end
@@ -45,7 +47,8 @@ RSpec.describe "Restaurants", type: :request do
           },
           budget: 3000,
           group_genre_id: group_genre.id,
-          group_area_id: group_area.id
+          group_area_id: group_area.id,
+          group_member_id: group_member.id,
         }
       }.to change(Restaurant, :count).by(1)
 
