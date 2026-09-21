@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_18_002205) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_21_123427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -148,6 +148,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_18_002205) do
   add_foreign_key "restaurant_avoid_conditions", "restaurants"
   add_foreign_key "restaurants", "group_areas"
   add_foreign_key "restaurants", "group_genres"
+  add_foreign_key "restaurants", "group_members", column: "added_by_id"
   add_foreign_key "restaurants", "groups"
-  add_foreign_key "restaurants", "users", column: "added_by_id"
 end

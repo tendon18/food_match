@@ -13,7 +13,7 @@ class RestaurantsController < ApplicationController
 
     restaurant = Restaurant.create!(
       group: @group,
-      added_by: current_user,
+      added_by: @group.group_members.find_by!(user: current_user),
       name: params[:restaurant][:name],
       budget: params[:budget],
       group_genre_id: params[:group_genre_id],
@@ -39,5 +39,30 @@ class RestaurantsController < ApplicationController
   def show
     @group = Group.find(params[:group_id])
     @restaurant = @group.restaurants.find(params[:id])
+  end
+
+  def edit
+    @group = Group.find(params[:group_id])
+    @restaurant = @group.restaurants.find(params[:id])
+
+    @group_genres = @group.group_genres
+    @group_areas = @group.group_areas
+  end
+
+  def update
+    @group = Group.find(params[:group_id])
+    @restaurant = @group.restaurants.find(params[:id])
+
+    @restaurant.update!(
+      name: params[:name],
+      budget: params[:budget],
+      group_genre_id: params[:group_genre_id],
+      group_area_id: params[:group_area_id],
+      features: params[:features],
+      url: params[:url],
+      memo: params[:memo]
+    )
+
+    redirect_to restaurant_path(@group, @restaurant)
   end
 end

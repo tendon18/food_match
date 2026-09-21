@@ -23,6 +23,15 @@ RSpec.describe "Restaurants", type: :request do
       }
 
       group = create(:group, creator: user)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        user: user,
+        role: "organizer",
+        nickname: "幹事"
+      )
+
       group_genre = create(:group_genre, group: group)
       group_area = create(:group_area, group: group)
 
@@ -44,7 +53,7 @@ RSpec.describe "Restaurants", type: :request do
 
       restaurant = Restaurant.last
       expect(restaurant.group).to eq(group)
-      expect(restaurant.added_by).to eq(user)
+      expect(restaurant.added_by).to eq(group_member)
       expect(restaurant.name).to eq("イタリアンA店")
       expect(restaurant.budget).to eq(3000)
       expect(restaurant.group_genre).to eq(group_genre)
