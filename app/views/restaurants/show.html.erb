@@ -1,0 +1,44 @@
+<h1>候補店舗の詳細</h1>
+
+<h2><%= @restaurant.name %></h2>
+
+<p>
+  予算：
+  <%= @restaurant.budget %>円
+</p>
+
+<p>
+  ジャンル：
+  <%= @restaurant.group_genre.genre %>
+</p>
+
+<p>
+  エリア：
+  <%= @restaurant.group_area.area %>
+</p>
+
+<p>
+  特徴：
+  <%= @restaurant.features %>
+</p>
+
+<p>
+  店舗URL：
+  <% if @restaurant.url.present? %>
+    <%= link_to @restaurant.url, @restaurant.url, target: "_blank", rel: "noopener" %>
+  <% end %>
+</p>
+
+<p>
+  メモ：
+  <%= @restaurant.memo %>
+</p>
+
+<p>
+  追加者：
+  <%= @restaurant.added_by.group_members.find_by(group: @group).nickname %>
+</p>
+
+<p>
+  <%= link_to "候補店舗一覧に戻る", group_restaurants_index_path(@group) %>
+</p>

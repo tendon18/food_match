@@ -35,4 +35,9 @@ class RestaurantsController < ApplicationController
     @group = Group.find(params[:group_id])
     @restaurant = @group.restaurants.find(params[:id])
   end
+
+  def show
+    @group = Group.find(params[:group_id])
+    @restaurant = @group.restaurants.find(params[:id])
+  end
 end

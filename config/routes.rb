@@ -91,6 +91,11 @@ Rails.application.routes.draw do
     to: "restaurants#index",
     as: :group_restaurants_index
 
+  # 候補店舗詳細
+  get "/groups/:group_id/restaurants/:id",
+    to: "restaurants#show",
+    as: :restaurant
+
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
