@@ -1,0 +1,60 @@
+<h1>店舗のNG条件を登録</h1>
+
+<p>
+  「<%= @restaurant.name %>」について、分かる範囲でNG条件を登録してください。
+</p>
+
+<p>
+  参加者の「避けたい条件」と照らし合わせ、候補から除外するために使用します。
+</p>
+
+<p>
+  分からない項目は「情報なし・判定できない」のままで大丈夫です。
+</p>
+
+<%= form_with url: restaurant_avoid_conditions_path(
+                  @group,
+                  @restaurant,
+                  group_member_id: @group_member.id
+                ),
+                method: :post do %>
+  <% @group_avoid_conditions.each do |group_avoid_condition| %>
+    <div>
+      <p><%= group_avoid_condition.condition %></p>
+
+      <label>
+        <%= radio_button_tag(
+              "conditions[#{group_avoid_condition.id}]",
+              "applicable"
+            ) %>
+        該当する
+      </label>
+
+      <label>
+        <%= radio_button_tag(
+              "conditions[#{group_avoid_condition.id}]",
+              "not_applicable"
+            ) %>
+        該当しない
+      </label>
+
+      <label>
+        <%= radio_button_tag(
+              "conditions[#{group_avoid_condition.id}]",
+              "unknown"
+            ) %>
+        情報なし・判定できない
+      </label>
+    </div>
+  <% end %>
+
+  <%= submit_tag "NG条件を登録する" %>
+<% end %>
+
+<div>
+  <%= link_to "あとで登録する",
+              group_restaurants_index_path(
+                @group,
+                group_member_id: @group_member.id
+              ) %>
+</div>

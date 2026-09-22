@@ -48,13 +48,14 @@ RSpec.describe "Restaurants", type: :request do
           budget: 3000,
           group_genre_id: group_genre.id,
           group_area_id: group_area.id,
-          group_member_id: group_member.id,
+          group_member_id: group_member.id
         }
       }.to change(Restaurant, :count).by(1)
 
       expect(response).to have_http_status(:redirect)
 
       restaurant = Restaurant.last
+
       expect(restaurant.group).to eq(group)
       expect(restaurant.added_by).to eq(group_member)
       expect(restaurant.name).to eq("イタリアンA店")
@@ -67,10 +68,12 @@ RSpec.describe "Restaurants", type: :request do
   describe "GET /groups/:group_id/restaurants/:id/edit" do
     it "自分が追加した候補店舗の編集画面を表示できる" do
       group = create(:group)
+
       group_member = create(
         :group_member,
         group: group
       )
+
       group_genre = create(:group_genre, group: group)
       group_area = create(:group_area, group: group)
 
@@ -119,6 +122,7 @@ RSpec.describe "Restaurants", type: :request do
         params: { group_member_id: my_group_member.id }
 
       expect(response).to have_http_status(:redirect)
+
       expect(response).to redirect_to(
         restaurant_path(
           group,
@@ -252,6 +256,7 @@ RSpec.describe "Restaurants", type: :request do
       }.to change(Restaurant, :count).by(-1)
 
       expect(response).to have_http_status(:redirect)
+
       expect(response).to redirect_to(
         group_restaurants_index_path(
           group,
@@ -292,6 +297,7 @@ RSpec.describe "Restaurants", type: :request do
       }.not_to change(Restaurant, :count)
 
       expect(response).to have_http_status(:redirect)
+
       expect(response).to redirect_to(
         restaurant_path(
           group,
@@ -331,6 +337,7 @@ RSpec.describe "Restaurants", type: :request do
         params: { group_member_id: group_member.id }
 
       expect(response).to have_http_status(:redirect)
+
       expect(response).to redirect_to(
         group_restaurants_index_path(
           group,

@@ -111,6 +111,14 @@ Rails.application.routes.draw do
     to: "restaurants#destroy",
     as: :destroy_restaurant
 
+  get "/groups/:group_id/restaurants/:restaurant_id/avoid_conditions/new",
+    to: "restaurant_avoid_conditions#new",
+    as: :new_restaurant_avoid_condition
+
+  post "/groups/:group_id/restaurants/:restaurant_id/avoid_conditions",
+    to: "restaurant_avoid_conditions#create",
+    as: :restaurant_avoid_conditions
+
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
