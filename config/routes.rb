@@ -119,6 +119,14 @@ Rails.application.routes.draw do
     to: "restaurant_avoid_conditions#create",
     as: :restaurant_avoid_conditions
 
+  get "/groups/:group_id/restaurants/:restaurant_id/avoid_conditions/edit",
+    to: "restaurant_avoid_conditions#edit",
+    as: :edit_restaurant_avoid_condition
+
+  patch "/groups/:group_id/restaurants/:restaurant_id/avoid_conditions",
+    to: "restaurant_avoid_conditions#update",
+    as: :update_restaurant_avoid_conditions
+
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

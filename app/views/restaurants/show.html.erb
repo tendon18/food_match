@@ -39,6 +39,30 @@
   <%= @restaurant.added_by.nickname %>
 </p>
 
+<h3>店舗のNG条件</h3>
+
+<% @restaurant.restaurant_avoid_conditions.each do |restaurant_avoid_condition| %>
+  <p>
+    <%= restaurant_avoid_condition.group_avoid_condition.condition %>：
+    <% if restaurant_avoid_condition.status == "applicable" %>
+      該当する
+    <% elsif restaurant_avoid_condition.status == "not_applicable" %>
+      該当しない
+    <% else %>
+      情報なし・判定できない
+    <% end %>
+  </p>
+<% end %>
+
+<p>
+  <%= link_to "店舗のNG条件を編集する",
+              edit_restaurant_avoid_condition_path(
+                @group,
+                @restaurant,
+                group_member_id: @group_member.id
+              ) %>
+</p>
+
 <p>
   <%= link_to "候補店舗一覧に戻る",
               group_restaurants_index_path(

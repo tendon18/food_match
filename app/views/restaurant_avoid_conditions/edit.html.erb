@@ -1,0 +1,88 @@
+<h1>店舗のNG条件を編集</h1>
+
+<p>
+  「<%= @restaurant.name %>」について、分かる範囲でNG条件を変更してください。
+</p>
+
+<p>
+  参加者の「避けたい条件」と照らし合わせ、候補から除外するために使用します。
+</p>
+
+<%= form_with url: update_restaurant_avoid_conditions_path(
+@group,
+@restaurant,
+group_member_id: @group_member.id
+),
+method: :patch do %>
+
+<% @group_avoid_conditions.each do |group_avoid_condition| %>
+<% restaurant_avoid_condition = @restaurant_avoid_conditions.find_by(
+group_avoid_condition_id: group_avoid_condition.id
+) %>
+
+<div>
+  <p>
+    <%= group_avoid_condition.condition %>
+  </p>
+
+  <label>
+    <%= radio_button_tag(
+          "conditions[#{group_avoid_condition.id}]",
+          "applicable",
+          restaurant_avoid_condition&.status == "applicable"
+        ) %>
+    該当する
+  </label>
+
+  <br>
+
+  <label>
+    <%= radio_button_tag(
+          "conditions[#{group_avoid_condition.id}]",
+          "not_applicable",
+          restaurant_avoid_condition&.status == "not_applicable"
+        ) %>
+    該当しない
+  </label>
+
+  <br>
+
+  <label>
+    <%= radio_button_tag(
+          "conditions[#{group_avoid_condition.id}]",
+          "unknown",
+          restaurant_avoid_condition&.status == "unknown"
+        ) %>
+    情報なし・判定できない
+  </label>
+</div>
+
+<% end %>
+
+  <br>
+
+<%= submit_tag "NG条件を保存する" %>
+<% end %>
+
+<br>
+
+<div>
+  <%= link_to "あとで登録する",
+              group_restaurants_index_path(
+                @group,
+                group_member_id: @group_member.id
+              ) %>
+</div>
+
+<p>
+  分からない項目は「情報なし・判定できない」のままで大丈夫です。
+</p>
+
+<p>
+  <%= link_to "店舗詳細に戻る",
+              restaurant_path(
+                @group,
+                @restaurant,
+                group_member_id: @group_member.id
+              ) %>
+</p>
