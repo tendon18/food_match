@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_21_123427) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_22_132308) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,6 +73,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_21_123427) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_avoid_condition_id"], name: "index_participant_condition_avoids_on_group_avoid_condition_id"
+    t.index ["participant_condition_id", "group_avoid_condition_id"], name: "idx_on_participant_condition_id_group_avoid_conditi_fc2ce6ceb4", unique: true
     t.index ["participant_condition_id"], name: "index_participant_condition_avoids_on_participant_condition_id"
   end
 
