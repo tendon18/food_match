@@ -47,7 +47,6 @@
               ) %>
 </p>
 
-
 <% if @restaurant.added_by == @group_member %>
   <p>
     <%= link_to "候補店舗を編集する",
@@ -56,5 +55,18 @@
                   @restaurant,
                   group_member_id: @group_member.id
                 ) %>
+  </p>
+
+  <p>
+    <%= link_to "候補店舗を削除する",
+                destroy_restaurant_path(
+                  @group,
+                  @restaurant,
+                  group_member_id: @group_member.id
+                ),
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: "この候補店舗を削除しますか？"
+                } %>
   </p>
 <% end %>

@@ -1,36 +1,40 @@
 <h1>みんなが追加した店舗一覧</h1>
 
-<% @restaurants.each do |restaurant| %>
-  <div>
-    <h2>
-      <%= link_to restaurant.name,
-                  restaurant_path(
-                    @group,
-                    restaurant,
-                    group_member_id: params[:group_member_id]
-                  ) %>
-    </h2>
+<% if @restaurants.empty? %>
+  <p>候補店舗はまだありません</p>
+<% else %>
+  <% @restaurants.each do |restaurant| %>
+    <div>
+      <h2>
+        <%= link_to restaurant.name,
+                    restaurant_path(
+                      @group,
+                      restaurant,
+                      group_member_id: params[:group_member_id]
+                    ) %>
+      </h2>
 
-    <p>
-      予算：
-      <%= restaurant.budget %>円
-    </p>
+      <p>
+        予算：
+        <%= restaurant.budget %>円
+      </p>
 
-    <p>
-      ジャンル：
-      <%= restaurant.group_genre.genre %>
-    </p>
+      <p>
+        ジャンル：
+        <%= restaurant.group_genre.genre %>
+      </p>
 
-    <p>
-      エリア：
-      <%= restaurant.group_area.area %>
-    </p>
+      <p>
+        エリア：
+        <%= restaurant.group_area.area %>
+      </p>
 
-    <p>
-      追加した人：
-      <%= restaurant.added_by.nickname %>
-    </p>
-  </div>
+      <p>
+        追加した人：
+        <%= restaurant.added_by.nickname %>
+      </p>
+    </div>
 
-  <hr>
+    <hr>
+  <% end %>
 <% end %>

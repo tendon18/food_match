@@ -106,6 +106,11 @@ Rails.application.routes.draw do
     to: "restaurants#update",
     as: :update_restaurant
 
+  # 候補店舗削除
+  delete "/groups/:group_id/restaurants/:id",
+    to: "restaurants#destroy",
+    as: :destroy_restaurant
+
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

@@ -224,4 +224,119 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body).to include("編集後のメモ")
     end
   end
+
+  describe "DELETE /groups/:group_id/restaurants/:id" do
+    it "自分が追加した候補店舗を削除できる" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = Restaurant.create!(
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      expect {
+        delete "/groups/#{group.id}/restaurants/#{restaurant.id}",
+          params: { group_member_id: group_member.id }
+      }.to change(Restaurant, :count).by(-1)
+
+      expect(response).to have_http_status(:redirect)
+      expect(response).to redirect_to(
+        group_restaurants_index_path(
+          group,
+          group_member_id: group_member.id
+        )
+      )
+    end
+
+    it "他人が追加した候補店舗は削除できない" do
+      group = create(:group)
+
+      my_group_member = create(
+        :group_member,
+        group: group
+      )
+
+      other_group_member = create(
+        :group_member,
+        group: group,
+        nickname: "他の参加者"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = Restaurant.create!(
+        group: group,
+        added_by: other_group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンB店",
+        budget: 3000
+      )
+
+      expect {
+        delete "/groups/#{group.id}/restaurants/#{restaurant.id}",
+          params: { group_member_id: my_group_member.id }
+      }.not_to change(Restaurant, :count)
+
+      expect(response).to have_http_status(:redirect)
+      expect(response).to redirect_to(
+        restaurant_path(
+          group,
+          restaurant,
+          group_member_id: my_group_member.id
+        )
+      )
+    end
+  end
+
+  describe "GET /groups/:group_id/restaurants/:id" do
+    it "削除済みの候補店舗にアクセスすると一覧画面へ戻る" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      restaurant_id = restaurant.id
+      restaurant.destroy!
+
+      get "/groups/#{group.id}/restaurants/#{restaurant_id}",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:redirect)
+      expect(response).to redirect_to(
+        group_restaurants_index_path(
+          group,
+          group_member_id: group_member.id
+        )
+      )
+    end
+  end
 end

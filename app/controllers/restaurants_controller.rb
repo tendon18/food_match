@@ -46,7 +46,14 @@ class RestaurantsController < ApplicationController
   def show
     @group = Group.find(params[:group_id])
     @group_member = @group.group_members.find(params[:group_member_id])
-    @restaurant = @group.restaurants.find(params[:id])
+    @restaurant = @group.restaurants.find_by(id: params[:id])
+
+    unless @restaurant
+      redirect_to group_restaurants_index_path(
+        @group,
+        group_member_id: @group_member.id
+      ) and return
+    end
   end
 
   def edit
@@ -92,6 +99,27 @@ class RestaurantsController < ApplicationController
     redirect_to restaurant_path(
       @group,
       @restaurant,
+      group_member_id: @group_member.id
+    )
+  end
+
+  def destroy
+    @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
+    @restaurant = @group.restaurants.find(params[:id])
+
+    unless @restaurant.added_by == @group_member
+      redirect_to restaurant_path(
+        @group,
+        @restaurant,
+        group_member_id: @group_member.id
+      ) and return
+    end
+
+    @restaurant.destroy!
+
+    redirect_to group_restaurants_index_path(
+      @group,
       group_member_id: @group_member.id
     )
   end
