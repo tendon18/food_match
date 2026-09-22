@@ -35,6 +35,7 @@ class RestaurantsController < ApplicationController
 
   def index
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find_by(role: "organizer")
     @restaurants = @group.restaurants
   end
 

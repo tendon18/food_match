@@ -25,6 +25,7 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
+    @group_member = @group.group_members.find_by!(role: "organizer")
   end
 
   def join

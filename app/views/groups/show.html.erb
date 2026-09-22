@@ -2,4 +2,10 @@
 
 <p>グループページ</p>
 
+<%= link_to "候補店舗一覧を見る",
+            group_restaurants_index_path(
+              @group,
+              group_member_id: @group_member.id
+            ) %>
+
 <%= link_to "グループ一覧に戻る", groups_path %>
