@@ -103,4 +103,85 @@ RSpec.describe "RestaurantAvoidConditions", type: :request do
       expect(restaurant_avoid_condition.reload.status).to eq("applicable")
     end
   end
+
+  describe "GET /groups/:group_id/restaurants/:restaurant_id/avoid_conditions/edit" do
+    it "allows the member who added the restaurant to edit avoid conditions" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group
+      )
+
+      group_area = create(
+        :group_area,
+        group: group
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/avoid_conditions/edit",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it "redirects when another member tries to edit the restaurant avoid conditions" do
+      group = create(:group)
+
+      restaurant_owner = create(
+        :group_member,
+        group: group
+      )
+
+      other_member = create(
+        :group_member,
+        group: group,
+        nickname: "別のメンバー"
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group
+      )
+
+      group_area = create(
+        :group_area,
+        group: group
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: restaurant_owner,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/avoid_conditions/edit",
+        params: { group_member_id: other_member.id }
+
+      expect(response).to redirect_to(
+        group_restaurants_index_path(
+          group,
+          group_member_id: other_member.id
+        )
+      )
+    end
+  end
 end

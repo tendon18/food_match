@@ -54,14 +54,16 @@
   </p>
 <% end %>
 
-<p>
-  <%= link_to "店舗のNG条件を編集する",
-              edit_restaurant_avoid_condition_path(
-                @group,
-                @restaurant,
-                group_member_id: @group_member.id
-              ) %>
-</p>
+<% if @restaurant.added_by == @group_member %>
+  <p>
+    <%= link_to "店舗のNG条件を編集する",
+                edit_restaurant_avoid_condition_path(
+                  @group,
+                  @restaurant,
+                  group_member_id: @group_member.id
+                ) %>
+  </p>
+<% end %>
 
 <p>
   <%= link_to "候補店舗一覧に戻る",
@@ -95,6 +97,8 @@
   </p>
 <% end %>
 
-<p>
-  <%= link_to "グループ一覧へ", groups_path %>
-</p>
+<% if @group_member.organizer? %>
+  <p>
+    <%= link_to "グループ一覧へ", groups_path %>
+  </p>
+<% end %>
