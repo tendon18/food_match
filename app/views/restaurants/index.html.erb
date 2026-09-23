@@ -45,4 +45,6 @@
               group_member_id: @group_member.id
             ) %>
 
-<%= link_to "グループ一覧へ", groups_path %>
+<% if @group_member.organizer? %>
+  <%= link_to "グループ一覧へ", groups_path %>
+<% end %>
