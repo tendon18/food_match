@@ -51,8 +51,15 @@ class RestaurantsController < ApplicationController
         end
       end
     end
+
+    @budget_scores = {}
+
+    @restaurants.each do |restaurant|
+      @budget_scores[restaurant.id] =
+        restaurant.budget_score(@group.group_members)
+    end
   end
-  
+
   def complete
     @group = Group.find(params[:group_id])
     @restaurant = @group.restaurants.find(params[:id])
