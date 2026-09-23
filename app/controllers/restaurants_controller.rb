@@ -36,9 +36,23 @@ class RestaurantsController < ApplicationController
   def index
     @group = Group.find(params[:group_id])
     @group_member = @group.group_members.find_by(role: "organizer")
-    @restaurants = @group.restaurants
-  end
 
+    @restaurants = @group.restaurants.reject do |restaurant|
+      @group.group_members.any? do |group_member|
+        participant_condition = group_member.participant_condition
+
+        next false unless participant_condition
+
+        participant_condition.participant_condition_avoids.any? do |participant_avoid|
+          restaurant.restaurant_avoid_conditions.any? do |restaurant_avoid|
+            participant_avoid.group_avoid_condition_id == restaurant_avoid.group_avoid_condition_id &&
+              restaurant_avoid.status == "applicable"
+          end
+        end
+      end
+    end
+  end
+  
   def complete
     @group = Group.find(params[:group_id])
     @restaurant = @group.restaurants.find(params[:id])

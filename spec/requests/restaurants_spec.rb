@@ -15,6 +15,286 @@ RSpec.describe "Restaurants", type: :request do
     end
   end
 
+  describe "GET /groups/:group_id/restaurants" do
+    it "参加者のNG条件に該当する店舗を一覧から除外する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理",
+        status: "avoid"
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: participant_condition,
+        group_avoid_condition: group_avoid_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: group_avoid_condition,
+        status: "applicable"
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include("イタリアンA店")
+    end
+
+    it "店舗側がnot_applicableの場合は一覧に残る" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理",
+        status: "avoid"
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: participant_condition,
+        group_avoid_condition: group_avoid_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンB店",
+        budget: 3000
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: group_avoid_condition,
+        status: "not_applicable"
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("イタリアンB店")
+    end
+
+    it "店舗側がunknownの場合は一覧に残る" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理",
+        status: "avoid"
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: participant_condition,
+        group_avoid_condition: group_avoid_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンC店",
+        budget: 3000
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: group_avoid_condition,
+        status: "unknown"
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("イタリアンC店")
+    end
+
+    it "店舗側にNG条件の登録がない場合は一覧に残る" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理",
+        status: "avoid"
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: participant_condition,
+        group_avoid_condition: group_avoid_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンD店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("イタリアンD店")
+    end
+
+    it "複数参加者のうち1人でもNG条件に該当する店舗は一覧から除外する" do
+      group = create(:group)
+
+      organizer = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      member = create(
+        :group_member,
+        group: group,
+        role: "member",
+        nickname: "テストメンバー"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      spicy_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理",
+        status: "avoid"
+      )
+
+      smoking_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "喫煙可",
+        status: "avoid"
+      )
+
+      organizer_condition = ParticipantCondition.create!(
+        group_member: organizer,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: organizer_condition,
+        group_avoid_condition: spicy_condition
+      )
+
+      member_condition = ParticipantCondition.create!(
+        group_member: member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: member_condition,
+        group_avoid_condition: smoking_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: organizer,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンE店",
+        budget: 3000
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: spicy_condition,
+        status: "applicable"
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: smoking_condition,
+        status: "not_applicable"
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: organizer.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include("イタリアンE店")
+    end
+  end
+
   describe "POST /groups/:group_id/restaurants" do
     let(:user) { create(:user) }
 
