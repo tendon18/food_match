@@ -18,4 +18,32 @@ class Restaurant < ApplicationRecord
       end
     end
   end
+
+  def genre_score(group_members)
+    group_members.sum do |group_member|
+      participant_condition = group_member.participant_condition
+
+      next 0 unless participant_condition
+
+      if participant_condition.group_genres.include?(group_genre)
+        2
+      else
+        0
+      end
+    end
+  end
+
+  def area_score(group_members)
+    group_members.sum do |group_member|
+      participant_condition = group_member.participant_condition
+
+      next 0 unless participant_condition
+
+      if participant_condition.group_areas.include?(group_area)
+        2
+      else
+        0
+      end
+    end
+  end
 end
