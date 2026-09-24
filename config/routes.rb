@@ -96,6 +96,11 @@ Rails.application.routes.draw do
     to: "restaurants#show",
     as: :restaurant
 
+  # おすすめランキング
+  get "/groups/:group_id/ranking",
+    to: "rankings#show",
+    as: :group_ranking
+
   # 候補店舗編集画面
   get "/groups/:group_id/restaurants/:id/edit",
    to: "restaurants#edit",
