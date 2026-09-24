@@ -45,6 +45,9 @@ class RankingsController < ApplicationController
 
       if @restaurant.budget <= participant_condition.budget
         @reasons << "#{group_member.nickname}：予算内"
+      else
+        over_budget = @restaurant.budget - participant_condition.budget
+        @reasons << "#{group_member.nickname}：予算オーバー（#{over_budget}円）"
       end
 
       if participant_condition.group_genres.include?(@restaurant.group_genre)
@@ -65,6 +68,15 @@ class RankingsController < ApplicationController
       end
         @reasons << "#{group_member.nickname}：NG条件に該当しない"
       end
+    end
+
+    @member_scores = {}
+
+    @group.group_members.each do |group_member|
+      @member_scores[group_member.id] =
+        @restaurant.budget_score_for(group_member) +
+        @restaurant.genre_score_for(group_member) +
+        @restaurant.area_score_for(group_member)
     end
   end
 end

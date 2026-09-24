@@ -14,3 +14,20 @@
     <%= reason %>
   </p>
 <% end %>
+
+<h2>メンバーごとの一致度</h2>
+
+<% @group.group_members.each do |group_member| %>
+  <p>
+    <%= group_member.nickname %>：
+    <%= @member_scores[group_member.id] %>点
+  </p>
+<% end %>
+
+<%= link_to "ランキングに戻る",
+            group_ranking_path(
+              @group,
+              group_member_id: @group_member.id
+            ) %>
+
+<%= link_to "グループ一覧", groups_path %>

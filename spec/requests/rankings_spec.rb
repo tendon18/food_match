@@ -220,6 +220,40 @@ RSpec.describe "Rankings", type: :request do
       expect(response.body).to include("予算内")
     end
 
+    it "スコア詳細画面に予算オーバーの理由を表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3500
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("予算オーバー（500円）")
+    end
+
     it "スコア詳細画面にジャンルの一致理由を表示する" do
       group = create(:group)
 
@@ -356,6 +390,100 @@ RSpec.describe "Rankings", type: :request do
 
       expect(response).to have_http_status(:success)
       expect(response.body).to include("NG条件に該当しない")
+    end
+
+    it "スコア詳細画面にメンバーごとの一致度を表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "Aさん"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("メンバーごとの一致度")
+      expect(response.body).to include("Aさん")
+    end
+
+    it "スコア詳細画面にランキングに戻るリンクを表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("ランキングに戻る")
+    end
+
+    it "スコア詳細画面にグループ一覧へのリンクを表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("グループ一覧")
     end
   end
 end
