@@ -26,6 +26,54 @@ RSpec.describe Restaurant, type: :model do
       expect(restaurant.budget_score([group_member])).to eq(2)
     end
 
+    it "1人分の予算スコアを計算する" do
+      group = create(:group)
+      group_member = create(:group_member, group: group)
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "テスト店舗",
+        budget: 3000
+      )
+
+      expect(restaurant.budget_score_for(group_member)).to eq(2)
+    end
+
+    it "1人分の予算スコアで500円超過した場合は1点減点する" do
+      group = create(:group)
+      group_member = create(:group_member, group: group)
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "テスト店舗",
+        budget: 3500
+      )
+
+      expect(restaurant.budget_score_for(group_member)).to eq(-1)
+    end
+
     it "予算を500円超過した場合は1点減点する" do
       group = create(:group)
       group_member = create(:group_member, group: group)
@@ -151,6 +199,40 @@ RSpec.describe Restaurant, type: :model do
       )
 
       expect(restaurant.genre_score([group_member])).to eq(2)
+    end
+
+    it "1人分のジャンルスコアを計算する" do
+      group = create(:group)
+      group_member = create(:group_member, group: group)
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "焼肉"
+      )
+
+      group_area = create(:group_area, group: group)
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "テスト店舗",
+        budget: 3000
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member
+      )
+
+      ParticipantConditionGenre.create!(
+        participant_condition: participant_condition,
+        group_genre: group_genre
+      )
+
+      expect(restaurant.genre_score_for(group_member)).to eq(2)
     end
 
     it "店舗のジャンルが参加者の希望ジャンルと一致しなければ0点" do
@@ -363,6 +445,40 @@ RSpec.describe Restaurant, type: :model do
       )
 
       expect(restaurant.area_score([group_member])).to eq(2)
+    end
+
+    it "1人分のエリアスコアを計算する" do
+      group = create(:group)
+      group_member = create(:group_member, group: group)
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "新宿"
+      )
+
+      group_genre = create(:group_genre, group: group)
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "テスト店舗",
+        budget: 3000
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member
+      )
+
+      ParticipantConditionArea.create!(
+        participant_condition: participant_condition,
+        group_area: group_area
+      )
+
+      expect(restaurant.area_score_for(group_member)).to eq(2)
     end
 
     it "店舗のエリアが参加者の希望エリアと一致しなければ0点" do

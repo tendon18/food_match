@@ -80,6 +80,10 @@ class RestaurantsController < ApplicationController
         group_member_id: @group_member.id
       ) and return
     end
+
+    if @group_member.organizer?
+      @total_score = @restaurant.total_score(@group.group_members)
+    end
   end
 
   def edit

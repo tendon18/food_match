@@ -1,1 +1,41 @@
 <h1>おすすめランキング</h1>
+
+<% if @restaurants.empty? %>
+  <p>ランキングに表示できる候補店舗はありません</p>
+<% else %>
+  <% @restaurants.each_with_index do |restaurant, index| %>
+    <div>
+      <p>
+        第<%= index + 1 %>位
+      </p>
+
+      <h2>
+        <%= restaurant.name %>
+      </h2>
+
+      <p>
+        ジャンル：
+        <%= restaurant.group_genre.genre %>
+      </p>
+
+      <p>
+        エリア：
+        <%= restaurant.group_area.area %>
+      </p>
+
+      <p>
+        予算：
+        <%= restaurant.budget %>円
+      </p>
+
+      <% if @group_member.organizer? %>
+        <p>
+          合計スコア：
+          <%= @total_scores[restaurant.id] %>点
+        </p>
+      <% end %>
+    </div>
+
+    <hr>
+  <% end %>
+<% end %>

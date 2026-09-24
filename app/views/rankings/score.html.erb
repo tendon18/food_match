@@ -1,0 +1,16 @@
+<h1>スコア詳細</h1>
+
+<h2><%= @restaurant.name %></h2>
+
+<p>
+  合計スコア：
+  <%= @total_score %>点
+</p>
+
+<h2>このお店が上位になった理由</h2>
+
+<% @reasons.each do |reason| %>
+  <p>
+    <%= reason %>
+  </p>
+<% end %>

@@ -349,7 +349,41 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body.index(high_score_restaurant.name))
         .to be < response.body.index(low_score_restaurant.name)
       end
+    it "メンバーには合計スコアを表示しない" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "member"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "店舗A",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(restaurant.name)
+      expect(response.body).not_to include("合計スコア：")
     end
+  end
 
   describe "POST /groups/:group_id/restaurants" do
     let(:user) { create(:user) }
@@ -562,6 +596,41 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body).to include("個室あり")
       expect(response.body).to include("https://example.jp")
       expect(response.body).to include("編集後のメモ")
+    end
+
+    it "幹事には合計スコアを表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("合計スコア：")
+      expect(response.body).to include("2点")
     end
   end
 
