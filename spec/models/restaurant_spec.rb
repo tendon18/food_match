@@ -541,4 +541,41 @@ RSpec.describe Restaurant, type: :model do
       ).to eq(2)
     end
   end
+
+  describe "#total_score" do
+    it "予算・ジャンル・エリアのスコアを合計する" do
+      group = create(:group)
+      group_member = create(:group_member, group: group)
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionGenre.create!(
+        participant_condition: participant_condition,
+        group_genre: group_genre
+      )
+
+      ParticipantConditionArea.create!(
+        participant_condition: participant_condition,
+        group_area: group_area
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      expect(restaurant.total_score(group.group_members)).to eq(6)
+    end
+  end
 end

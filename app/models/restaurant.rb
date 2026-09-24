@@ -46,4 +46,10 @@ class Restaurant < ApplicationRecord
       end
     end
   end
+
+  def total_score(group_members)
+    budget_score(group_members) +
+      genre_score(group_members) +
+      area_score(group_members)
+  end
 end
