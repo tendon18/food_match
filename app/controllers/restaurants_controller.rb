@@ -52,11 +52,15 @@ class RestaurantsController < ApplicationController
       end
     end
 
-    @budget_scores = {}
+    @total_scores = {}
 
     @restaurants.each do |restaurant|
-      @budget_scores[restaurant.id] =
-        restaurant.budget_score(@group.group_members)
+      @total_scores[restaurant.id] =
+        restaurant.total_score(@group.group_members)
+    end
+
+    @restaurants = @restaurants.sort_by do |restaurant|
+      -@total_scores[restaurant.id]
     end
   end
 

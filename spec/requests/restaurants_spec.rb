@@ -293,7 +293,63 @@ RSpec.describe "Restaurants", type: :request do
       expect(response).to have_http_status(:success)
       expect(response.body).not_to include("イタリアンE店")
     end
-  end
+
+    it "合計スコアの高い店舗から順番に表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionGenre.create!(
+        participant_condition: participant_condition,
+        group_genre: group_genre
+      )
+
+      ParticipantConditionArea.create!(
+        participant_condition: participant_condition,
+        group_area: group_area
+      )
+
+      high_score_restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "高得点のお店",
+        budget: 3000
+      )
+
+      low_score_restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "低得点のお店",
+        budget: 5000
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+
+      expect(response.body.index(high_score_restaurant.name))
+        .to be < response.body.index(low_score_restaurant.name)
+      end
+    end
 
   describe "POST /groups/:group_id/restaurants" do
     let(:user) { create(:user) }
