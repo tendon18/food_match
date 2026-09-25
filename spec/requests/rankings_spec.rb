@@ -788,7 +788,7 @@ RSpec.describe "Rankings", type: :request do
         params: { group_member_id: group_member1.id }
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("2人が希望エリアと一致")
+      expect(response.body).to include("希望エリア「渋谷」と一致")
     end
 
     it "スコア詳細画面に予算を超過しているメンバーを表示する" do

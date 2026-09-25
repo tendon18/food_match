@@ -65,7 +65,7 @@ class RankingsController < ApplicationController
     end
 
     @area_reason =
-      "#{area_match_count}人が希望エリアと一致"
+      "希望エリア「#{@restaurant.group_area.area}」と一致"
 
     @reasons = []
 
