@@ -31,9 +31,16 @@
       <% if @group_member.organizer? %>
         <p>
           合計スコア：
-          <%= @total_scores[restaurant.id] %>点
+            <%= @total_scores[restaurant.id] %>点
         </p>
-      <% end %>
+
+        <%= link_to "スコア詳細を見る →",
+                    restaurant_score_path(
+                    @group,
+                    restaurant,
+                    group_member_id: @group_member.id
+                    ) %>
+        <% end %>
     </div>
 
     <hr>

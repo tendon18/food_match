@@ -52,6 +52,35 @@ RSpec.describe "Rankings", type: :request do
       expect(response.body).to include("2点")
     end
 
+    it "幹事にはスコア詳細へのリンクを表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/ranking",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("スコア詳細を見る →")
+    end
+
     it "メンバーには合計スコアを表示しない" do
       group = create(:group)
 
