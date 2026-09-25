@@ -111,6 +111,11 @@ Rails.application.routes.draw do
    to: "restaurants#edit",
    as: :edit_restaurant
 
+  # 候補店舗の追加完了
+  patch "/groups/:group_id/restaurants/submission_complete",
+    to: "restaurants#submission_complete",
+    as: :complete_restaurant_submission
+
   # 候補店舗更新
   patch "/groups/:group_id/restaurants/:id",
     to: "restaurants#update",

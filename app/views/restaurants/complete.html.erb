@@ -5,7 +5,7 @@
 </p>
 
 <p>
-  みんなが追加した候補店舗を確認できます。
+  みんなで行きたいお店候補に追加しました！
 </p>
 
 <div>
@@ -26,6 +26,15 @@
 </div>
 
 <div>
+  <%= form_with url: complete_restaurant_submission_path(@group),
+                method: :patch,
+                local: true do %>
+    <%= hidden_field_tag :group_member_id, params[:group_member_id] %>
+    <%= submit_tag "候補店舗の追加を完了する" %>
+  <% end %>
+</div>
+
+<div>
   <%= link_to "候補店舗一覧を見る",
               group_restaurants_index_path(
                 @group,
@@ -33,6 +42,8 @@
               ) %>
 </div>
 
-<div>
-  <%= link_to "グループ一覧へ", groups_path %>
-</div>
+<% if @group_member.organizer? %>
+  <div>
+    <%= link_to "グループ一覧へ", groups_path %>
+  </div>
+<% end %>

@@ -36,6 +36,7 @@ class RestaurantsController < ApplicationController
   def index
     @group = Group.find(params[:group_id])
     @group_member = @group.group_members.find(params[:group_member_id])
+    @group_members = @group.group_members
 
     @restaurants = @group.restaurants.reject do |restaurant|
       @group.group_members.any? do |group_member|
@@ -51,21 +52,11 @@ class RestaurantsController < ApplicationController
         end
       end
     end
-
-    @total_scores = {}
-
-    @restaurants.each do |restaurant|
-      @total_scores[restaurant.id] =
-        restaurant.total_score(@group.group_members)
-    end
-
-    @restaurants = @restaurants.sort_by do |restaurant|
-      -@total_scores[restaurant.id]
-    end
   end
 
   def complete
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
     @restaurant = @group.restaurants.find(params[:id])
   end
 
@@ -79,10 +70,6 @@ class RestaurantsController < ApplicationController
         @group,
         group_member_id: @group_member.id
       ) and return
-    end
-
-    if @group_member.organizer?
-      @total_score = @restaurant.total_score(@group.group_members)
     end
   end
 
@@ -147,6 +134,20 @@ class RestaurantsController < ApplicationController
     end
 
     @restaurant.destroy!
+
+    redirect_to group_restaurants_index_path(
+      @group,
+      group_member_id: @group_member.id
+    )
+  end
+
+  def submission_complete
+    @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
+
+    @group_member.update!(
+      restaurant_submission_completed: true
+    )
 
     redirect_to group_restaurants_index_path(
       @group,

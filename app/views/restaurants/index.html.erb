@@ -3,12 +3,8 @@
 <% if @restaurants.empty? %>
   <p>候補店舗はまだありません</p>
 <% else %>
-  <% @restaurants.each_with_index do |restaurant, index| %>
+  <% @restaurants.each do |restaurant| %>
     <div>
-      <p>
-        第<%= index + 1 %>位
-      </p>
-
       <h2>
         <%= link_to restaurant.name,
                     restaurant_path(
@@ -17,7 +13,7 @@
                       group_member_id: params[:group_member_id]
                     ) %>
       </h2>
-    
+
       <p>
         ジャンル：
         <%= restaurant.group_genre.genre %>
@@ -37,13 +33,6 @@
         追加した人：
         <%= restaurant.added_by.nickname %>
       </p>
-
-    <% if @group_member.organizer? %>
-      <p>
-        合計スコア：
-        <%= @total_scores[restaurant.id] %>点
-      </p>
-    <% end %>
     </div>
 
     <hr>
@@ -52,6 +41,12 @@
 
 <%= link_to "候補店舗を追加する",
             new_restaurant_path(
+              @group,
+              group_member_id: @group_member.id
+            ) %>
+
+<%= link_to "ランキングを見る",
+            group_ranking_path(
               @group,
               group_member_id: @group_member.id
             ) %>

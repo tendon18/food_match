@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_22_132308) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_25_053858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -45,6 +45,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_22_132308) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "nickname"
+    t.boolean "restaurant_submission_completed", default: false, null: false
     t.index ["group_id", "nickname"], name: "index_group_members_on_group_id_and_nickname", unique: true
   end
 

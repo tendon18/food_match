@@ -65,13 +65,6 @@
   </p>
 <% end %>
 
-<% if @group_member.organizer? %>
-  <p>
-    合計スコア：
-    <%= @total_score %>点
-  </p>
-<% end %>
-
 <p>
   <%= link_to "候補店舗一覧に戻る",
               group_restaurants_index_path(

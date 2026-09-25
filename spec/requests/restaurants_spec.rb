@@ -597,40 +597,30 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body).to include("https://example.jp")
       expect(response.body).to include("編集後のメモ")
     end
+  end
 
-    it "幹事には合計スコアを表示する" do
+  describe "PATCH /groups/:group_id/restaurants/submission_complete" do
+    it "候補店舗の追加完了にできる" do
       group = create(:group)
 
       group_member = create(
         :group_member,
-        group: group,
-        role: "organizer"
+        group: group
       )
 
-      group_genre = create(:group_genre, group: group)
-      group_area = create(:group_area, group: group)
-
-      ParticipantCondition.create!(
-        group_member: group_member,
-        budget: 3000
-      )
-
-      restaurant = create(
-        :restaurant,
-        group: group,
-        added_by: group_member,
-        group_genre: group_genre,
-        group_area: group_area,
-        name: "イタリアンA店",
-        budget: 3000
-      )
-
-      get "/groups/#{group.id}/restaurants/#{restaurant.id}",
+      patch "/groups/#{group.id}/restaurants/submission_complete",
         params: { group_member_id: group_member.id }
 
-      expect(response).to have_http_status(:success)
-      expect(response.body).to include("合計スコア：")
-      expect(response.body).to include("2点")
+      puts response.body
+
+      expect(response).to redirect_to(
+        group_restaurants_index_path(
+          group,
+          group_member_id: group_member.id
+        )
+      )
+
+      expect(group_member.reload.restaurant_submission_completed).to eq(true)
     end
   end
 
