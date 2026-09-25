@@ -1,5 +1,31 @@
 <h1>みんなが追加した店舗一覧</h1>
 
+<h2>参加状況</h2>
+
+<% completed_count = @group_members.count(&:restaurant_submission_completed) %>
+
+<% if completed_count == @group_members.count %>
+  <p>
+    <%= @group_members.count %>人全員が候補を追加しました！
+  </p>
+<% else %>
+  <p>
+    <%= completed_count %> / <%= @group_members.count %>人が候補を追加しています
+  </p>
+<% end %>
+
+<% @group_members.each do |group_member| %>
+  <div>
+    <% if group_member.restaurant_submission_completed %>
+      ✓
+      <%= group_member.nickname %>　回答済み
+    <% else %>
+      ○
+      <%= group_member.nickname %>　未回答
+    <% end %>
+  </div>
+<% end %>
+
 <% if @restaurants.empty? %>
   <p>候補店舗はまだありません</p>
 <% else %>

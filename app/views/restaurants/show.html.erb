@@ -63,6 +63,15 @@
                   group_member_id: @group_member.id
                 ) %>
   </p>
+
+  <div>
+    <%= form_with url: complete_restaurant_submission_path(@group),
+                  method: :patch,
+                  local: true do %>
+      <%= hidden_field_tag :group_member_id, @group_member.id %>
+      <%= submit_tag "候補店舗の追加を完了する" %>
+    <% end %>
+  </div>
 <% end %>
 
 <p>

@@ -383,6 +383,36 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body).to include(restaurant.name)
       expect(response.body).not_to include("合計スコア：")
     end
+
+    it "参加者の候補店舗追加状況を表示する" do
+      group = create(:group)
+
+      completed_member = create(
+        :group_member,
+        group: group,
+        nickname: "完了メンバー",
+        restaurant_submission_completed: true
+      )
+
+      incomplete_member = create(
+        :group_member,
+        group: group,
+        nickname: "未完了メンバー",
+        restaurant_submission_completed: false
+      )
+
+      get "/groups/#{group.id}/restaurants",
+        params: { group_member_id: completed_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("1 / 2人が候補を追加しています")
+      expect(response.body).to include("✓")
+      expect(response.body).to include("○")
+      expect(response.body).to include("完了メンバー")
+      expect(response.body).to include("回答済み")
+      expect(response.body).to include("未完了メンバー")
+      expect(response.body).to include("未回答")
+    end
   end
 
   describe "POST /groups/:group_id/restaurants" do
@@ -596,6 +626,33 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body).to include("個室あり")
       expect(response.body).to include("https://example.jp")
       expect(response.body).to include("編集後のメモ")
+    end
+
+    it "自分が追加した候補店舗の詳細画面に追加完了ボタンが表示される" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = Restaurant.create!(
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("候補店舗の追加を完了する")
     end
   end
 
