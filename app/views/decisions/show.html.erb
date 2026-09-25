@@ -1,2 +1,31 @@
-<h1>Decisions#show</h1>
-<p>Find me in app/views/decisions/show.html.erb</p>
+<h1>この店舗に決定しますか？</h1>
+
+<h2><%= @restaurant.name %></h2>
+
+<p>
+  ジャンル：
+  <%= @restaurant.group_genre.genre %>
+</p>
+
+<p>
+  エリア：
+  <%= @restaurant.group_area.area %>
+</p>
+
+<p>
+  予算：
+  <%= @restaurant.budget %>円
+</p>
+
+<%= form_with url: update_group_decision_path(@group), method: :patch do |form| %>
+<%= form.hidden_field :restaurant_id, value: @restaurant.id %>
+<%= form.hidden_field :group_member_id, value: @group_member.id %>
+
+<%= form.submit "この店舗に決定する" %>
+<% end %>
+
+<%= link_to "ランキングに戻る",
+group_ranking_path(
+@group,
+group_member_id: @group_member.id
+) %>

@@ -1,2 +1,34 @@
-<h1>Decisions#complete</h1>
-<p>Find me in app/views/decisions/complete.html.erb</p>
+<h1>店舗決定！</h1>
+
+<p>
+  <%= @restaurant.name %>に決定しました！
+</p>
+
+<p>
+  みんなで選んだお店で、<br>
+  楽しい時間を過ごしましょう。
+</p>
+
+<hr>
+
+<h2><%= @restaurant.name %></h2>
+
+<p>
+  <%= @restaurant.group_genre.genre %>
+  /
+  <%= number_with_delimiter(@restaurant.budget) %>円
+</p>
+
+<p>
+  <%= @restaurant.group_area.area %>
+</p>
+
+<p>
+  [店舗情報を見る]
+</p>
+
+<hr>
+
+<h2>みんなに共有しましょう！</h2>
+
+<%= link_to "グループ一覧に戻る", groups_path %>

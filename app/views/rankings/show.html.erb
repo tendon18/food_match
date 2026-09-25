@@ -55,6 +55,9 @@
 
       <%= form.submit "店舗を決定する" %>
     <% end %>
+
+    <%= link_to "グループ一覧へ", groups_path %>
+    
   <% else %>
     <% @restaurants.each_with_index do |restaurant, index| %>
       <div>
