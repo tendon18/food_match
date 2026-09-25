@@ -3,11 +3,32 @@
 <h2><%= @restaurant.name %></h2>
 
 <p>
+  <%= @restaurant.group_genre.genre %> /
+  <%= @restaurant.budget %>円
+</p>
+
+<p>
+  <%= @restaurant.group_area.area %>
+</p>
+
+<p>
   合計スコア：
   <%= @total_score %>点
 </p>
 
 <h2>このお店が上位になった理由</h2>
+
+<p>
+  <%= @budget_reason %>
+</p>
+
+<p>
+  <%= @genre_reason %>
+</p>
+
+<p>
+  <%= @area_reason %>
+</p>
 
 <% @reasons.each do |reason| %>
   <p>

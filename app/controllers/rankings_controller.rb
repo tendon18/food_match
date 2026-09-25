@@ -36,6 +36,37 @@ class RankingsController < ApplicationController
     @restaurant = @group.restaurants.find(params[:restaurant_id])
     @total_score = @restaurant.total_score(@group.group_members)
 
+    budget_members = @group.group_members.select do |group_member|
+      group_member.participant_condition
+    end
+
+    within_budget_count = budget_members.count do |group_member|
+      @restaurant.budget <= group_member.participant_condition.budget
+    end
+
+    @budget_reason =
+      "#{budget_members.count}人中#{within_budget_count}人が予算以内"
+
+    genre_match_count = @group.group_members.count do |group_member|
+      participant_condition = group_member.participant_condition
+
+      participant_condition &&
+        participant_condition.group_genres.include?(@restaurant.group_genre)
+      end
+
+    @genre_reason =
+      "#{genre_match_count}人が希望ジャンルと一致"
+
+    area_match_count = @group.group_members.count do |group_member|
+      participant_condition = group_member.participant_condition
+
+      participant_condition &&
+        participant_condition.group_areas.include?(@restaurant.group_area)
+    end
+
+    @area_reason =
+      "#{area_match_count}人が希望エリアと一致"
+
     @reasons = []
 
     @group.group_members.each do |group_member|
@@ -47,7 +78,7 @@ class RankingsController < ApplicationController
         @reasons << "#{group_member.nickname}：予算内"
       else
         over_budget = @restaurant.budget - participant_condition.budget
-        @reasons << "#{group_member.nickname}：予算オーバー（#{over_budget}円）"
+        @reasons << "#{group_member.nickname}：予算を#{over_budget}円超過"
       end
 
       if participant_condition.group_genres.include?(@restaurant.group_genre)

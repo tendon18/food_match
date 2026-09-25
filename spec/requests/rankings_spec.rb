@@ -280,7 +280,9 @@ RSpec.describe "Rankings", type: :request do
         params: { group_member_id: group_member.id }
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("予算オーバー（500円）")
+      expect(response.body).to include("テストユーザー")
+      expect(response.body).to include("500円")
+      expect(response.body).to include("予算を500円超過")
     end
 
     it "スコア詳細画面にジャンルの一致理由を表示する" do
@@ -513,6 +515,359 @@ RSpec.describe "Rankings", type: :request do
 
       expect(response).to have_http_status(:success)
       expect(response.body).to include("グループ一覧")
+    end
+
+    it "スコア詳細画面に店舗情報を表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "イタリアン"
+      )
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "渋谷"
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 2500
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("イタリアンA店")
+      expect(response.body).to include("イタリアン")
+      expect(response.body).to include("2500円")
+      expect(response.body).to include("渋谷")
+    end
+
+    it "スコア詳細画面に予算以内の人数を表示する" do
+      group = create(:group)
+
+      group_member1 = create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "Aさん"
+      )
+
+      group_member2 = create(
+        :group_member,
+        group: group,
+        nickname: "Bさん"
+      )
+
+      group_member3 = create(
+        :group_member,
+        group: group,
+        nickname: "Cさん"
+      )
+
+      group_member4 = create(
+        :group_member,
+        group: group,
+        nickname: "Dさん"
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member1,
+        budget: 3000
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member2,
+        budget: 2500
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member3,
+        budget: 3000
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member4,
+        budget: 2000
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "イタリアン"
+      )
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "渋谷"
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member1,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 2500
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member1.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("4人中3人が予算以内")
+    end
+
+    it "スコア詳細画面に希望ジャンルと一致した人数を表示する" do
+      group = create(:group)
+
+      group_member1 = create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "Aさん"
+      )
+
+      group_member2 = create(
+        :group_member,
+        group: group,
+        nickname: "Bさん"
+      )
+
+      group_member3 = create(
+        :group_member,
+        group: group,
+        nickname: "Cさん"
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "イタリアン"
+      )
+
+      other_genre = create(
+        :group_genre,
+        group: group,
+        genre: "和食"
+      )
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "渋谷"
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member1,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 2500
+      )
+
+      participant_condition1 = ParticipantCondition.create!(
+        group_member: group_member1,
+        budget: 3000
+      )
+
+      participant_condition1.group_genres << group_genre
+
+      participant_condition2 = ParticipantCondition.create!(
+        group_member: group_member2,
+        budget: 3000
+      )
+
+      participant_condition2.group_genres << group_genre
+
+      participant_condition3 = ParticipantCondition.create!(
+        group_member: group_member3,
+        budget: 3000
+      )
+
+      participant_condition3.group_genres << other_genre
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member1.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("2人が希望ジャンルと一致")
+    end
+
+    it "スコア詳細画面に希望エリアと一致した人数を表示する" do
+      group = create(:group)
+
+      group_member1 = create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "Aさん"
+      )
+
+      group_member2 = create(
+        :group_member,
+        group: group,
+        nickname: "Bさん"
+      )
+
+      group_member3 = create(
+        :group_member,
+        group: group,
+        nickname: "Cさん"
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "イタリアン"
+      )
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "渋谷"
+      )
+
+      other_area = create(
+        :group_area,
+        group: group,
+        area: "新宿"
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member1,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 2500
+      )
+
+      participant_condition1 = ParticipantCondition.create!(
+        group_member: group_member1,
+        budget: 3000
+      )
+
+      participant_condition1.group_areas << group_area
+
+      participant_condition2 = ParticipantCondition.create!(
+        group_member: group_member2,
+        budget: 3000
+      )
+
+      participant_condition2.group_areas << group_area
+
+      participant_condition3 = ParticipantCondition.create!(
+        group_member: group_member3,
+        budget: 3000
+      )
+
+      participant_condition3.group_areas << other_area
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member1.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("2人が希望エリアと一致")
+    end
+
+    it "スコア詳細画面に予算を超過しているメンバーを表示する" do
+      group = create(:group)
+
+      group_member1 = create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "Aさん"
+      )
+
+      group_member2 = create(
+        :group_member,
+        group: group,
+        nickname: "Bさん"
+      )
+
+      group_member3 = create(
+        :group_member,
+        group: group,
+        nickname: "Cさん"
+      )
+
+      group_member4 = create(
+        :group_member,
+        group: group,
+        nickname: "Dさん"
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member1,
+        budget: 3000
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member2,
+        budget: 2500
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member3,
+        budget: 3000
+      )
+
+      ParticipantCondition.create!(
+      group_member: group_member4,
+        budget: 2000
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "イタリアン"
+      )
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "渋谷"
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member1,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 2500
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member1.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Dさん")
+      expect(response.body).to include("500円")
+      expect(response.body).to include("予算")
     end
   end
 end
