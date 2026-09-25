@@ -50,4 +50,47 @@ RSpec.describe "Groups", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "GET /groups/:id" do
+    let(:user) { create(:user) }
+
+    it "グループ詳細画面に参加メンバーと共有URLを表示する" do
+      post session_path, params: {
+        email: user.email,
+        password: "password"
+      }
+
+      group = create(:group, creator: user)
+
+      create(
+        :group_member,
+        group: group,
+        user: user,
+        role: "organizer",
+        nickname: "幹事さん"
+      )
+
+      create(
+        :group_member,
+        group: group,
+        nickname: "メンバーさん1"
+      )
+
+      create(
+        :group_member,
+        group: group,
+        nickname: "メンバーさん2"
+      )
+
+      get group_path(group)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("幹事さん")
+      expect(response.body).to include("メンバーさん1")
+      expect(response.body).to include("メンバーさん2")
+      expect(response.body).to include(
+        "/groups/join/#{group.invite_token}"
+      )
+    end
+  end
 end

@@ -2,10 +2,33 @@
 
 <p>グループページ</p>
 
+<h2>参加メンバー</h2>
+
+<% @group_members.each do |group_member| %>
+  <p>
+    <%= group_member.nickname %>
+    <% if group_member.organizer? %>
+      （幹事）
+    <% end %>
+  </p>
+<% end %>
+
+<h2>共有URL</h2>
+
+<p>
+  <%= request.base_url + "/groups/join/#{@group.invite_token}" %>
+</p>
+
 <%= link_to "候補店舗一覧を見る",
             group_restaurants_index_path(
               @group,
               group_member_id: @group_member.id
             ) %>
 
-<%= link_to "グループ一覧に戻る", groups_path %>
+<%= link_to "ランキングを見る",
+            group_ranking_path(
+              @group,
+              group_member_id: @group_member.id
+            ) %>
+
+<%= link_to "グループ一覧へ", groups_path %>
