@@ -246,7 +246,7 @@ RSpec.describe "Rankings", type: :request do
         params: { group_member_id: group_member.id }
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("予算内")
+      expect(response.body).to include("1人中1人が予算以内")
     end
 
     it "スコア詳細画面に予算オーバーの理由を表示する" do
@@ -282,7 +282,7 @@ RSpec.describe "Rankings", type: :request do
       expect(response).to have_http_status(:success)
       expect(response.body).to include("テストユーザー")
       expect(response.body).to include("500円")
-      expect(response.body).to include("予算を500円超過")
+      expect(response.body).to include("1人中0人が予算以内")
     end
 
     it "スコア詳細画面にジャンルの一致理由を表示する" do
@@ -326,7 +326,7 @@ RSpec.describe "Rankings", type: :request do
         params: { group_member_id: group_member.id }
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("ジャンルが一致")
+      expect(response.body).to include("1人が希望ジャンルと一致")
     end
 
     it "スコア詳細画面にエリアの一致理由を表示する" do
@@ -370,7 +370,7 @@ RSpec.describe "Rankings", type: :request do
         params: { group_member_id: group_member.id }
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("エリアが一致")
+      expect(response.body).to include("希望エリア「渋谷」と一致")
     end
     
     it "スコア詳細画面にNG条件に該当しない理由を表示する" do
@@ -420,7 +420,51 @@ RSpec.describe "Rankings", type: :request do
         params: { group_member_id: group_member.id }
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("NG条件に該当しない")
+      expect(response.body).to include("全員の避けたい条件に該当しない")
+    end
+
+    it "スコア詳細画面に全員の避けたい条件に該当しない理由を表示する" do
+      group = create(:group)
+
+      group_member1 = create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "Aさん"
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member1,
+        budget: 3000
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "和食"
+      )
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "新宿"
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member1,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "店舗1",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member1.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("✓ 全員の避けたい条件に該当しない")
     end
 
     it "スコア詳細画面にメンバーごとの一致度を表示する" do
@@ -868,6 +912,64 @@ RSpec.describe "Rankings", type: :request do
       expect(response.body).to include("Dさん")
       expect(response.body).to include("500円")
       expect(response.body).to include("予算")
+    end
+
+    it "スコア詳細画面にメンバーごとの条件を表示する" do
+      group = create(:group)
+
+      group_member1 = create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "Aさん"
+      )
+
+      ParticipantCondition.create!(
+        group_member: group_member1,
+        budget: 3000
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group,
+        genre: "和食"
+      )
+
+      group_area = create(
+        :group_area,
+        group: group,
+        area: "新宿"
+      )
+
+      ParticipantConditionGenre.create!(
+        participant_condition: group_member1.participant_condition,
+        group_genre: group_genre
+      )
+
+      ParticipantConditionArea.create!(
+        participant_condition: group_member1.participant_condition,
+        group_area: group_area
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member1,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "店舗1",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: group_member1.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Aさん")
+      expect(response.body).to include("予算：〜3,000円")
+      expect(response.body).to include("ジャンル：和食")
+      expect(response.body).to include("エリア：新宿")
+      expect(response.body).to include("避けたい条件：該当なし")
     end
   end
 end

@@ -19,30 +19,52 @@
 <h2>このお店が上位になった理由</h2>
 
 <p>
-  <%= @budget_reason %>
+  ✓ <%= @budget_reason %>
 </p>
 
 <p>
-  <%= @genre_reason %>
+  ✓ <%= @genre_reason %>
 </p>
 
 <p>
-  <%= @area_reason %>
+  ✓ <%= @area_reason %>
 </p>
 
-<% @reasons.each do |reason| %>
+<% if @avoid_reason %>
   <p>
-    <%= reason %>
+    ✓ 全員の避けたい条件に該当しない
   </p>
 <% end %>
 
 <h2>メンバーごとの一致度</h2>
 
-<% @group.group_members.each do |group_member| %>
+<% @group.group_members.each_with_index do |group_member, index| %>
   <p>
     <%= group_member.nickname %>：
     <%= @member_scores[group_member.id] %>点
   </p>
+
+  <% if group_member.participant_condition %>
+    <p>
+      予算：〜<%= number_with_delimiter(group_member.participant_condition.budget) %>円
+    </p>
+
+    <p>
+      ジャンル：<%= group_member.participant_condition.group_genres.map(&:genre).join("、") %>
+    </p>
+
+    <p>
+      エリア：<%= group_member.participant_condition.group_areas.map(&:area).join("、") %>
+    </p>
+
+    <p>
+      避けたい条件：<%= group_member.participant_condition.participant_condition_avoids.any? ? group_member.participant_condition.participant_condition_avoids.map { |avoid| avoid.group_avoid_condition.condition }.join("、") : "該当なし" %>
+    </p>
+  <% end %>
+
+  <% unless index == @group.group_members.length - 1 %>
+    <hr>
+  <% end %>
 <% end %>
 
 <%= link_to "ランキングに戻る",
