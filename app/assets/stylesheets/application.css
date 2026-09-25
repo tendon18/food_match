@@ -1,15 +1,22 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+.restaurant-card {
+  display: block;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.restaurant-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.restaurant-card:has(input[type="radio"]:checked) {
+  border-color: #4CAF50;
+  background-color: #EAF7EA;
+}
+
+.restaurant-card-content {
+  width: 100%;
+}

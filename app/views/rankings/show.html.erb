@@ -3,46 +3,86 @@
 <% if @restaurants.empty? %>
   <p>ランキングに表示できる候補店舗はありません</p>
 <% else %>
-  <% @restaurants.each_with_index do |restaurant, index| %>
-    <div>
-      <p>
-        第<%= index + 1 %>位
-      </p>
+  <% if @group_member.organizer? %>
+    <%= form_with url: group_decision_path(@group), method: :get do |form| %>
+      <% @restaurants.each_with_index do |restaurant, index| %>
+        <label class="restaurant-card">
+          <%= form.radio_button :restaurant_id,
+                                restaurant.id,
+                                required: true %>
 
-      <h2>
-        <%= restaurant.name %>
-      </h2>
+          <div class="restaurant-card-content">
+            <p>
+              第<%= index + 1 %>位
+            </p>
 
-      <p>
-        ジャンル：
-        <%= restaurant.group_genre.genre %>
-      </p>
+            <h2>
+              <%= restaurant.name %>
+            </h2>
 
-      <p>
-        エリア：
-        <%= restaurant.group_area.area %>
-      </p>
+            <p>
+              ジャンル：
+              <%= restaurant.group_genre.genre %>
+            </p>
 
-      <p>
-        予算：
-        <%= restaurant.budget %>円
-      </p>
+            <p>
+              エリア：
+              <%= restaurant.group_area.area %>
+            </p>
 
-      <% if @group_member.organizer? %>
+            <p>
+              予算：
+              <%= restaurant.budget %>円
+            </p>
+
+            <p>
+              合計スコア：
+              <%= @total_scores[restaurant.id] %>点
+            </p>
+
+            <%= link_to "スコア詳細を見る →",
+                        restaurant_score_path(
+                          @group,
+                          restaurant,
+                          group_member_id: @group_member.id
+                        ) %>
+          </div>
+        </label>
+        <hr>
+      <% end %>
+
+      <%= form.hidden_field :group_member_id, value: @group_member.id %>
+
+      <%= form.submit "店舗を決定する" %>
+    <% end %>
+  <% else %>
+    <% @restaurants.each_with_index do |restaurant, index| %>
+      <div>
         <p>
-          合計スコア：
-            <%= @total_scores[restaurant.id] %>点
+          第<%= index + 1 %>位
         </p>
 
-        <%= link_to "スコア詳細を見る →",
-                    restaurant_score_path(
-                    @group,
-                    restaurant,
-                    group_member_id: @group_member.id
-                    ) %>
-        <% end %>
-    </div>
+        <h2>
+          <%= restaurant.name %>
+        </h2>
 
-    <hr>
+        <p>
+          ジャンル：
+          <%= restaurant.group_genre.genre %>
+        </p>
+
+        <p>
+          エリア：
+          <%= restaurant.group_area.area %>
+        </p>
+
+        <p>
+          予算：
+          <%= restaurant.budget %>円
+        </p>
+      </div>
+
+      <hr>
+    <% end %>
   <% end %>
 <% end %>

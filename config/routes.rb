@@ -101,6 +101,21 @@ Rails.application.routes.draw do
     to: "rankings#show",
     as: :group_ranking
 
+  # 店舗決定確認
+  get "/groups/:group_id/decision",
+    to: "decisions#show",
+    as: :group_decision
+
+  # 店舗決定
+  patch "/groups/:group_id/decision",
+    to: "decisions#update",
+    as: :update_group_decision
+
+  # 店舗決定完了
+  get "/groups/:group_id/decision/complete",
+    to: "decisions#complete",
+    as: :group_decision_complete
+
   # スコア詳細
   get "/groups/:group_id/restaurants/:restaurant_id/score",
     to: "rankings#score",
