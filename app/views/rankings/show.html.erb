@@ -1,91 +1,126 @@
 <h1>おすすめランキング</h1>
 
-<% if @restaurants.empty? %>
-  <p>ランキングに表示できる候補店舗はありません</p>
+<% if !@group_member.organizer? && @decided_restaurant %>
+  <h2>行く店舗が決まりました！</h2>
+
+  <p>
+    みんなで選んだお店で、<br>
+    楽しい時間を過ごしましょう。
+  </p>
+
+  <hr>
+
+  <h2><%= @decided_restaurant.name %></h2>
+
+  <p>
+    <%= @decided_restaurant.group_genre.genre %>
+    /
+    <%= number_with_delimiter(@decided_restaurant.budget) %>円
+  </p>
+
+  <p>
+    <%= @decided_restaurant.group_area.area %>
+  </p>
+
+  <%= link_to "決定した店舗を見る",
+              group_decision_complete_path(
+                @group,
+                group_member_id: @group_member.id
+              ) %>
+
 <% else %>
-  <% if @group_member.organizer? %>
-    <%= form_with url: group_decision_path(@group), method: :get do |form| %>
-      <% @restaurants.each_with_index do |restaurant, index| %>
-        <label class="restaurant-card">
-          <%= form.radio_button :restaurant_id,
-                                restaurant.id,
-                                required: true %>
 
-          <div class="restaurant-card-content">
-            <p>
-              第<%= index + 1 %>位
-            </p>
+  <% if @restaurants.empty? %>
+    <p>ランキングに表示できる候補店舗はありません</p>
+  <% else %>
 
-            <h2>
-              <%= restaurant.name %>
-            </h2>
+    <% if @group_member.organizer? %>
+      <%= form_with url: group_decision_path(@group), method: :get do |form| %>
+        <% @restaurants.each_with_index do |restaurant, index| %>
+          <label class="restaurant-card">
+            <%= form.radio_button :restaurant_id,
+                                  restaurant.id,
+                                  required: true %>
 
-            <p>
-              ジャンル：
-              <%= restaurant.group_genre.genre %>
-            </p>
+            <div class="restaurant-card-content">
+              <p>
+                第<%= index + 1 %>位
+              </p>
 
-            <p>
-              エリア：
-              <%= restaurant.group_area.area %>
-            </p>
+              <h2>
+                <%= restaurant.name %>
+              </h2>
 
-            <p>
-              予算：
-              <%= restaurant.budget %>円
-            </p>
+              <p>
+                ジャンル：
+                <%= restaurant.group_genre.genre %>
+              </p>
 
-            <p>
-              合計スコア：
-              <%= @total_scores[restaurant.id] %>点
-            </p>
+              <p>
+                エリア：
+                <%= restaurant.group_area.area %>
+              </p>
 
-            <%= link_to "スコア詳細を見る →",
-                        restaurant_score_path(
-                          @group,
-                          restaurant,
-                          group_member_id: @group_member.id
-                        ) %>
-          </div>
-        </label>
-        <hr>
+              <p>
+                予算：
+                <%= restaurant.budget %>円
+              </p>
+
+              <p>
+                合計スコア：
+                <%= @total_scores[restaurant.id] %>点
+              </p>
+
+              <%= link_to "スコア詳細を見る →",
+                          restaurant_score_path(
+                            @group,
+                            restaurant,
+                            group_member_id: @group_member.id
+                          ) %>
+            </div>
+          </label>
+
+          <hr>
+        <% end %>
+
+        <%= form.hidden_field :group_member_id,
+                              value: @group_member.id %>
+
+        <%= form.submit "店舗を決定する" %>
       <% end %>
 
-      <%= form.hidden_field :group_member_id, value: @group_member.id %>
+      <%= link_to "グループ一覧へ", groups_path %>
 
-      <%= form.submit "店舗を決定する" %>
-    <% end %>
+    <% else %>
+      <% @restaurants.each_with_index do |restaurant, index| %>
+        <div>
+          <p>
+            第<%= index + 1 %>位
+          </p>
 
-    <%= link_to "グループ一覧へ", groups_path %>
-    
-  <% else %>
-    <% @restaurants.each_with_index do |restaurant, index| %>
-      <div>
-        <p>
-          第<%= index + 1 %>位
-        </p>
+          <h2>
+            <%= restaurant.name %>
+          </h2>
 
-        <h2>
-          <%= restaurant.name %>
-        </h2>
+          <p>
+            ジャンル：
+            <%= restaurant.group_genre.genre %>
+          </p>
 
-        <p>
-          ジャンル：
-          <%= restaurant.group_genre.genre %>
-        </p>
+          <p>
+            エリア：
+            <%= restaurant.group_area.area %>
+          </p>
 
-        <p>
-          エリア：
-          <%= restaurant.group_area.area %>
-        </p>
+          <p>
+            予算：
+            <%= restaurant.budget %>円
+          </p>
+        </div>
 
-        <p>
-          予算：
-          <%= restaurant.budget %>円
-        </p>
-      </div>
-
-      <hr>
+        <hr>
+      <% end %>
     <% end %>
   <% end %>
+
 <% end %>

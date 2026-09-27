@@ -3,6 +3,13 @@ class RankingsController < ApplicationController
     @group = Group.find(params[:group_id])
     @group_member = @group.group_members.find(params[:group_member_id])
 
+    @decided_restaurant = nil
+
+    if @group.decided_restaurant_id
+      @decided_restaurant =
+        @group.restaurants.find(@group.decided_restaurant_id)
+    end
+
     @restaurants = @group.restaurants.reject do |restaurant|
       @group.group_members.any? do |group_member|
         participant_condition = group_member.participant_condition

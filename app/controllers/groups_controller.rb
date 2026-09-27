@@ -25,12 +25,29 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
-    @group_member = @group.group_members.find_by!(role: "organizer")
+
+    group_member_id = session[:group_member_ids]&.dig(@group.id.to_s)
+
+    if group_member_id
+      @group_member = @group.group_members.find(group_member_id)
+    else
+      @group_member = @group.group_members.find_by!(role: "organizer")
+    end
+
     @group_members = @group.group_members
   end
 
   def join
     @group = Group.find_by!(invite_token: params[:invite_token])
+
+    group_member_id = session[:group_member_ids]&.dig(@group.id.to_s)
+
+    if group_member_id
+      redirect_to group_path(
+        @group,
+        group_member_id: group_member_id
+      )
+    end
   end
 
   def join_create
@@ -39,6 +56,9 @@ class GroupsController < ApplicationController
     group_member = @group.group_members.create!(
       nickname: params[:nickname]
     )
+
+    session[:group_member_ids] ||= {}
+    session[:group_member_ids][@group.id.to_s] = group_member.id
 
     redirect_to new_participant_condition_path(@group, group_member)
   rescue ActiveRecord::RecordNotUnique

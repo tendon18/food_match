@@ -13,11 +13,37 @@
   </p>
 <% end %>
 
-<h2>共有URL</h2>
+<% if @group_member.organizer? %>
+  <h2>共有URL</h2>
 
-<p>
-  <%= request.base_url + "/groups/join/#{@group.invite_token}" %>
-</p>
+  <p>
+    <%= request.base_url + "/groups/join/#{@group.invite_token}" %>
+  </p>
+<% end %>
+
+<% if @group.decided_restaurant_id %>
+  <% decided_restaurant = @group.restaurants.find(@group.decided_restaurant_id) %>
+
+  <h2>決定した店舗</h2>
+
+  <h3><%= decided_restaurant.name %></h3>
+
+  <p>
+    <%= decided_restaurant.group_genre.genre %>
+    /
+    <%= number_with_delimiter(decided_restaurant.budget) %>円
+  </p>
+
+  <p>
+    <%= decided_restaurant.group_area.area %>
+  </p>
+
+  <%= link_to "決定した店舗を見る",
+              group_decision_complete_path(
+                @group,
+                group_member_id: @group_member.id
+              ) %>
+<% end %>
 
 <%= link_to "候補店舗一覧を見る",
             group_restaurants_index_path(
@@ -31,4 +57,6 @@
               group_member_id: @group_member.id
             ) %>
 
-<%= link_to "グループ一覧へ", groups_path %>
+<% if @group_member.organizer? %>
+  <%= link_to "グループ一覧へ", groups_path %>
+<% end %>

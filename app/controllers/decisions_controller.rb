@@ -23,6 +23,7 @@ class DecisionsController < ApplicationController
 
   def complete
     @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
     @restaurant = @group.restaurants.find(@group.decided_restaurant_id)
   end
 end
