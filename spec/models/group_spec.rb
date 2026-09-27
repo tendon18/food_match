@@ -31,7 +31,7 @@ RSpec.describe Group, type: :model do
       group = Group.new(name: "")
 
       expect(group).not_to be_valid
-      expect(group.errors[:name]).to include("can't be blank")
+      expect(group.errors[:name]).to include("を入力してください")
     end
   end
 end

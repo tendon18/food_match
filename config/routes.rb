@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root "home#top"
 
   resources :users, only: [ :new, :create ]
+  get "/users", to: "users#new"
   resource :session, only: [ :new, :create, :destroy ]
   resources :password_resets, only: [:new, :create, :edit, :update]
   resources :groups, only: [:index, :new, :create, :show]

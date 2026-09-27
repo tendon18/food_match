@@ -1,20 +1,26 @@
 <h1>新規登録</h1>
 
+<div style="color: red;">
+  <% @user.errors.full_messages.each do |message| %>
+    <div><%= message %></div>
+  <% end %>
+</div>
+
 <%= form_with model: @user, url: users_path, data: { turbo: false } do |f| %>
-  <div>
+  <div style="display: grid; grid-template-columns: 140px 180px; align-items: center; margin-bottom: 5px;">
     <%= f.label :email, "メールアドレス" %>
     <%= f.text_field :email %>
   </div>
 
-  <div>
+  <div style="display: grid; grid-template-columns: 140px 180px; align-items: center; margin-bottom: 5px;">
     <%= f.label :password, "パスワード" %>
     <%= f.password_field :password %>
   </div>
 
-  <div>
+  <div style="display: grid; grid-template-columns: 140px 180px; align-items: center; margin-bottom: 5px;">
     <%= f.label :password_confirmation, "パスワード(確認)" %>
     <%= f.password_field :password_confirmation %>
   </div>
 
-  <%= f.submit "登録する" %>
+  <%= f.submit "登録する", class: "button" %>
 <% end %>

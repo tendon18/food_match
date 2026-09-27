@@ -2,7 +2,9 @@ class User < ApplicationRecord
   authenticates_with_sorcery!
 
   attr_accessor :password_confirmation
+  validates :password, presence: true, on: :create
   validates :password, confirmation: true
+  validates :email, presence: true, uniqueness: true
 
   has_many :created_groups,
            class_name: "Group",
