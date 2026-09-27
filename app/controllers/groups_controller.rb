@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   before_action :require_login, only: [:index, :new, :create]
-  
+
   def index
     @groups = current_user.groups
   end
@@ -32,8 +32,11 @@ class GroupsController < ApplicationController
 
     if group_member_id
       @group_member = @group.group_members.find(group_member_id)
-    else
+    elsif current_user
       @group_member = @group.group_members.find_by!(role: "organizer")
+    else
+      redirect_to root_path
+      return
     end
 
     @group_members = @group.group_members

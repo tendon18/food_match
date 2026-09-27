@@ -106,5 +106,20 @@ RSpec.describe "Groups", type: :request do
         "/groups/join/#{group.invite_token}"
       )
     end
+
+    it "未ログインで参加者セッションがない場合はトップページへリダイレクトされる" do
+      group = create(:group)
+
+      create(
+        :group_member,
+        group: group,
+        role: "organizer",
+        nickname: "幹事さん"
+      )
+
+      get group_path(group)
+
+      expect(response).to redirect_to(root_path)
+    end
   end
 end
