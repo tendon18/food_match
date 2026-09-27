@@ -38,25 +38,36 @@
     <%= decided_restaurant.group_area.area %>
   </p>
 
-  <%= link_to "決定した店舗を見る",
-              group_decision_complete_path(
-                @group,
-                group_member_id: @group_member.id
-              ) %>
+  <div style="margin-bottom: 12px;">
+    <%= link_to "決定した店舗を見る",
+                group_decision_complete_path(
+                  @group,
+                  group_member_id: @group_member.id
+                ),
+                class: "button-secondary" %>
+  </div>
 <% end %>
 
-<%= link_to "候補店舗一覧を見る",
-            group_restaurants_index_path(
-              @group,
-              group_member_id: @group_member.id
-            ) %>
+<div style="margin-bottom: 12px;">
+  <%= link_to "候補店舗一覧を見る",
+              group_restaurants_index_path(
+                @group,
+                group_member_id: @group_member.id
+              ),
+              class: "button-secondary" %>
+</div>
 
-<%= link_to "ランキングを見る",
-            group_ranking_path(
-              @group,
-              group_member_id: @group_member.id
-            ) %>
+<div style="margin-bottom: 12px;">
+  <%= link_to "ランキングを見る",
+              group_ranking_path(
+                @group,
+                group_member_id: @group_member.id
+              ),
+              class: "button" %>
+</div>
 
 <% if @group_member.organizer? %>
-  <%= link_to "グループ一覧へ", groups_path %>
+  <div>
+    <%= link_to "グループ一覧へ", groups_path %>
+  </div>
 <% end %>

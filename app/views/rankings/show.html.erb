@@ -86,10 +86,14 @@
         <%= form.hidden_field :group_member_id,
                               value: @group_member.id %>
 
-        <%= form.submit "店舗を決定する" %>
+        <div style="margin-bottom: 12px;">
+          <%= form.submit "店舗を決定する", class: "button" %>
+        </div>
       <% end %>
 
-      <%= link_to "グループ一覧へ", groups_path %>
+      <div>
+        <%= link_to "グループ一覧へ", groups_path %>
+      </div>
 
     <% else %>
       <% @restaurants.each_with_index do |restaurant, index| %>

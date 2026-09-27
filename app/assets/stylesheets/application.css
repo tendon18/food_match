@@ -21,33 +21,34 @@
   width: 100%;
 }
 
-.button {
+.button,
+.button-secondary {
   display: inline-block;
   padding: 6px 10px;
-  border: none;
   border-radius: 5px;
-  background-color: #4CAF50;
-  color: white;
   text-decoration: none;
   cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.button {
+  border: none;
+  background-color: #4CAF50;
+  color: white;
 }
 
 .button-secondary {
-  display: inline-block;
-  padding: 10px 20px;
   border: 1px solid #4CAF50;
-  border-radius: 8px;
   background-color: white;
   color: #4CAF50;
-  text-decoration: none;
-  cursor: pointer;
 }
 
 .button-danger {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 6px 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   background-color: #d9534f;
   color: white;
   text-decoration: none;

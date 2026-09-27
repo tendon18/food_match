@@ -1,4 +1,4 @@
-<h1>この店舗に決定しますか？</h1>
+<h1>このお店に決定しますか？</h1>
 
 <h2><%= @restaurant.name %></h2>
 
@@ -18,14 +18,19 @@
 </p>
 
 <%= form_with url: update_group_decision_path(@group), method: :patch do |form| %>
-<%= form.hidden_field :restaurant_id, value: @restaurant.id %>
-<%= form.hidden_field :group_member_id, value: @group_member.id %>
+  <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
+  <%= form.hidden_field :group_member_id, value: @group_member.id %>
 
-<%= form.submit "この店舗に決定する" %>
+<div style="margin-bottom: 12px;">
+    <%= form.submit "この店舗に決定する", class: "button" %>
+  </div>
 <% end %>
 
-<%= link_to "ランキングに戻る",
-group_ranking_path(
-@group,
-group_member_id: @group_member.id
-) %>
+<div>
+  <%= link_to "ランキングに戻る",
+              group_ranking_path(
+                @group,
+                group_member_id: @group_member.id
+              ),
+              class: "button-secondary" %>
+</div>

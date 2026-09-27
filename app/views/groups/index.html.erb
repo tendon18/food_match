@@ -10,6 +10,15 @@
   <p>グループがありません</p>
 <% end %>
 
-<%= link_to "グループを作成する", new_group_path %>
+<div style="margin-bottom: 12px;">
+  <%= link_to "グループを作成する",
+              new_group_path,
+              class: "button" %>
+</div>
 
-<%= button_to "ログアウト", session_path, method: :delete %>
+<div>
+  <%= button_to "ログアウト",
+                session_path,
+                method: :delete,
+                class: "button-danger" %>
+</div>

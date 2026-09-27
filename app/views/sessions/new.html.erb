@@ -6,17 +6,17 @@
 
 <%= form_with url: session_path, local: true, data: { turbo: false } do |f| %>
 
-  <div>
+  <div style="display: grid; grid-template-columns: 140px 180px; align-items: center; margin-bottom: 5px;">
     <%= f.label :email, "メールアドレス" %>
     <%= f.text_field :email %>
   </div>
 
-  <div>
+  <div style="display: grid; grid-template-columns: 140px 180px; align-items: center; margin-bottom: 5px;">
     <%= f.label :password, "パスワード" %>
     <%= f.password_field :password %>
   </div>
 
-<%= f.submit "ログインする", class: "button" %>
+  <%= f.submit "ログインする", class: "button" %>
 <% end %>
 
 <%= link_to "パスワードをお忘れの方はこちら", new_password_reset_path %>
