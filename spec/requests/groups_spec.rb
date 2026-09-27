@@ -2,9 +2,23 @@ require "rails_helper"
 
 RSpec.describe "Groups", type: :request do
   describe "GET /new" do
-    it "returns http success" do
+    let(:user) { create(:user) }
+
+    it "ログインユーザーはグループ作成画面を表示できる" do
+      post session_path, params: {
+        email: user.email,
+        password: "password"
+      }
+
       get "/groups/new"
+
       expect(response).to have_http_status(:success)
+    end
+
+    it "未ログインユーザーはログイン画面へリダイレクトされる" do
+      get "/groups/new"
+
+      expect(response).to redirect_to(root_path)
     end
   end
 
