@@ -43,6 +43,66 @@ RSpec.describe "RestaurantAvoidConditions", type: :request do
     end
   end
 
+  describe "POST /groups/:group_id/restaurants/:restaurant_id/avoid_conditions" do
+    it "creates restaurant avoid conditions" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group
+      )
+
+      group_genre = create(
+        :group_genre,
+        group: group
+      )
+
+      group_area = create(
+        :group_area,
+        group: group
+      )
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理",
+        status: "avoid"
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "イタリアンA店",
+        budget: 3000
+      )
+
+      post "/groups/#{group.id}/restaurants/#{restaurant.id}/avoid_conditions",
+        params: {
+          group_member_id: group_member.id,
+          conditions: {
+            group_avoid_condition.id.to_s => "applicable"
+          }
+        }
+
+      expect(response).to redirect_to(
+        restaurant_path(
+          group,
+          restaurant,
+          group_member_id: group_member.id
+        )
+      )
+
+      restaurant_avoid_condition =
+        restaurant.restaurant_avoid_conditions.find_by(
+          group_avoid_condition: group_avoid_condition
+        )
+
+      expect(restaurant_avoid_condition.status).to eq("applicable")
+    end
+  end
+
   describe "PATCH /groups/:group_id/restaurants/:restaurant_id/avoid_conditions" do
     it "updates the restaurant avoid condition" do
       group = create(:group)
