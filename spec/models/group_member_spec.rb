@@ -32,4 +32,18 @@ RSpec.describe GroupMember, type: :model do
       expect(group_member.organizer?).to be false
     end
   end
+
+  describe "バリデーション" do
+    it "nicknameがあれば有効" do
+      group_member = build(:group_member)
+
+      expect(group_member).to be_valid
+    end
+
+    it "nicknameがなければ無効" do
+      group_member = build(:group_member, nickname: nil)
+
+      expect(group_member).to be_invalid
+    end
+  end
 end
