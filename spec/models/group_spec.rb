@@ -34,4 +34,12 @@ RSpec.describe Group, type: :model do
       expect(group.errors[:name]).to include("を入力してください")
     end
   end
+
+  describe "招待トークン" do
+    it "グループ作成時に自動生成される" do
+      group = create(:group)
+
+      expect(group.invite_token).to be_present
+    end
+  end
 end

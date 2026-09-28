@@ -47,6 +47,25 @@ RSpec.describe "Groups", type: :request do
       expect(group_member.user).to eq(user)
       expect(group_member.role).to eq("organizer")
       expect(group_member.nickname).to eq("テスト幹事")
+      expect(response).to redirect_to(group_conditions_area_path(group))
+    end
+
+    it "グループ名が空の場合はグループを作成せず作成画面を再表示する" do
+      post session_path, params: {
+        email: user.email,
+        password: "password"
+      }
+
+      expect {
+        post groups_path, params: {
+          group: {
+            name: ""
+          },
+          nickname: "テスト幹事"
+        }
+      }.not_to change(Group, :count)
+
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 
@@ -120,6 +139,53 @@ RSpec.describe "Groups", type: :request do
       get group_path(group)
 
       expect(response).to redirect_to(root_path)
+    end
+  end
+
+  describe "GET /groups/join/:invite_token" do
+    let(:group) { create(:group) }
+
+    it "招待URLから参加画面を表示できる" do
+      get "/groups/join/#{group.invite_token}"
+
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "POST /groups/join/:invite_token" do
+    let(:group) { create(:group) }
+
+    it "参加者を登録して参加条件入力画面へ進む" do
+      expect {
+        post "/groups/join/#{group.invite_token}", params: {
+          nickname: "参加者さん"
+        }
+      }.to change(GroupMember, :count).by(1)
+
+      group_member = GroupMember.last
+
+      expect(group_member.group).to eq(group)
+      expect(group_member.nickname).to eq("参加者さん")
+      expect(response).to redirect_to(
+        new_participant_condition_path(group, group_member)
+      )
+    end
+
+    it "同じニックネームがすでに参加している場合は参加画面を再表示する" do
+      create(
+        :group_member,
+        group: group,
+        nickname: "参加者さん"
+      )
+
+      expect {
+        post "/groups/join/#{group.invite_token}", params: {
+          nickname: "参加者さん"
+        }
+      }.not_to change(GroupMember, :count)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include("※このニックネームはすでに参加しています")
     end
   end
 end

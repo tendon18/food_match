@@ -9,5 +9,12 @@ RSpec.describe GroupAvoidCondition, type: :model do
       expect(association.class_name).to eq("Group")
       expect(association.foreign_key).to eq("group_id")
     end
+
+    it "restaurant_avoid_conditionsを複数持つ" do
+      association = described_class.reflect_on_association(:restaurant_avoid_conditions)
+
+      expect(association.macro).to eq(:has_many)
+      expect(association.class_name).to eq("RestaurantAvoidCondition")
+    end
   end
 end

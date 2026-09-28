@@ -28,4 +28,20 @@ RSpec.describe ParticipantConditionAvoid, type: :model do
       }.to raise_error(ActiveRecord::RecordNotUnique)
     end
   end
+
+  describe "関連付け" do
+    it "participant_conditionに属する" do
+      association = described_class.reflect_on_association(:participant_condition)
+
+      expect(association.macro).to eq(:belongs_to)
+      expect(association.class_name).to eq("ParticipantCondition")
+    end
+
+    it "group_avoid_conditionに属する" do
+      association = described_class.reflect_on_association(:group_avoid_condition)
+
+      expect(association.macro).to eq(:belongs_to)
+      expect(association.class_name).to eq("GroupAvoidCondition")
+    end
+  end
 end
