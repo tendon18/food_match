@@ -145,6 +145,15 @@ class RestaurantsController < ApplicationController
     @group = Group.find(params[:group_id])
     @group_member = @group.group_members.find(params[:group_member_id])
 
+    session_group_member_id = session[:group_member_ids]&.dig(@group.id.to_s)
+
+    unless session_group_member_id.to_i == @group_member.id
+      redirect_to group_restaurants_index_path(
+        @group,
+        group_member_id: session_group_member_id
+      ) and return
+    end
+
     @group_member.update!(
       restaurant_submission_completed: true
     )

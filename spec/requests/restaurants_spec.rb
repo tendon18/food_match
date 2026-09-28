@@ -579,6 +579,61 @@ RSpec.describe "Restaurants", type: :request do
       expect(restaurant.url).to eq("https://example.jp")
       expect(restaurant.memo).to eq("編集後のメモ")
     end
+
+    it "他のメンバーが候補店舗を直接編集できない" do
+      group = create(:group)
+
+      owner = create(
+        :group_member,
+        group: group,
+        role: "member",
+        nickname: "店舗追加者"
+      )
+
+      other_member = create(
+        :group_member,
+        group: group,
+        role: "member",
+        nickname: "別メンバー"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = Restaurant.create!(
+        group: group,
+        added_by: owner,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "元の店舗名",
+        budget: 3000
+      )
+
+      patch "/groups/#{group.id}/restaurants/#{restaurant.id}",
+        params: {
+          name: "不正に変更した店舗名",
+          budget: 5000,
+          group_genre_id: group_genre.id,
+          group_area_id: group_area.id,
+          features: "個室あり",
+          url: "https://example.jp",
+          memo: "不正な編集",
+          group_member_id: other_member.id
+        }
+
+      expect(response).to redirect_to(
+        restaurant_path(
+          group,
+          restaurant,
+          group_member_id: other_member.id
+        )
+      )
+
+      restaurant.reload
+
+      expect(restaurant.name).to eq("元の店舗名")
+      expect(restaurant.budget).to eq(3000)
+    end
   end
 
   describe "GET /groups/:group_id/restaurants/:id" do
@@ -660,15 +715,14 @@ RSpec.describe "Restaurants", type: :request do
     it "候補店舗の追加完了にできる" do
       group = create(:group)
 
-      group_member = create(
-        :group_member,
-        group: group
-      )
+      post "/groups/join/#{group.invite_token}", params: {
+        nickname: "参加者"
+      }
+
+      group_member = group.group_members.find_by!(nickname: "参加者")
 
       patch "/groups/#{group.id}/restaurants/submission_complete",
         params: { group_member_id: group_member.id }
-
-      puts response.body
 
       expect(response).to redirect_to(
         group_restaurants_index_path(
@@ -678,6 +732,28 @@ RSpec.describe "Restaurants", type: :request do
       )
 
       expect(group_member.reload.restaurant_submission_completed).to eq(true)
+    end
+
+    it "他のメンバーの候補店舗追加完了状態を変更できない" do
+      group = create(:group)
+
+      post "/groups/join/#{group.invite_token}", params: {
+        nickname: "自分"
+      }
+
+      my_group_member = group.group_members.find_by!(nickname: "自分")
+
+      other_group_member = create(
+        :group_member,
+        group: group,
+        nickname: "他の参加者",
+        restaurant_submission_completed: false
+      )
+
+      patch "/groups/#{group.id}/restaurants/submission_complete",
+        params: { group_member_id: other_group_member.id }
+
+      expect(other_group_member.reload.restaurant_submission_completed).to eq(false)
     end
   end
 
