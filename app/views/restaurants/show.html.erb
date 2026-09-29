@@ -61,7 +61,8 @@
                   @group,
                   @restaurant,
                   group_member_id: @group_member.id
-                ) %>
+                ),
+                class: "button-secondary" %>
   </p>
 
   <div>
@@ -69,7 +70,7 @@
                   method: :patch,
                   local: true do %>
       <%= hidden_field_tag :group_member_id, @group_member.id %>
-      <%= submit_tag "候補店舗の追加を完了する" %>
+      <%= submit_tag "候補店舗の追加を完了する", class: "button" %>
     <% end %>
   </div>
 <% end %>
@@ -79,7 +80,8 @@
               group_restaurants_index_path(
                 @group,
                 group_member_id: @group_member.id
-              ) %>
+              ),
+              class: "button-secondary" %>
 </p>
 
 <% if @restaurant.added_by == @group_member %>
@@ -89,7 +91,8 @@
                   @group,
                   @restaurant,
                   group_member_id: @group_member.id
-                ) %>
+                ),
+                class: "button-secondary" %>
   </p>
 
   <p>
@@ -99,6 +102,7 @@
                   @restaurant,
                   group_member_id: @group_member.id
                 ),
+                class: "button-secondary",
                 data: {
                   turbo_method: :delete,
                   turbo_confirm: "この候補店舗を削除しますか？"

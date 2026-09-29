@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
     if @user.save
       auto_login(@user)
-      redirect_to new_group_path
+      redirect_to new_group_path(from_signup: true)
     else
       render :new
     end

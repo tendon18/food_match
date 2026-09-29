@@ -48,13 +48,14 @@
     </div>
   <% end %>
 
-  <%= submit_tag "NG条件を登録する" %>
+  <%= submit_tag "NG条件を登録する", class: "button" %>
 <% end %>
 
-<div>
+<div style="margin-top: 12px;">
   <%= link_to "あとで登録する",
               group_restaurants_index_path(
                 @group,
                 group_member_id: @group_member.id
-              ) %>
+              ),
+              class: "button-secondary" %>
 </div>

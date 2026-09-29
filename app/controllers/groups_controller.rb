@@ -7,17 +7,21 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+    @from_signup = params[:from_signup]
   end
 
   def create
     @group = current_user.created_groups.build(group_params)
 
     if @group.save
-      @group.group_members.create!(
+      group_member = @group.group_members.create!(
         user: current_user,
         role: "organizer",
         nickname: params[:nickname]
       )
+
+      session[:group_member_ids] ||= {}
+      session[:group_member_ids][@group.id.to_s] = group_member.id
 
       redirect_to group_conditions_area_path(@group)
     else
@@ -48,10 +52,14 @@ class GroupsController < ApplicationController
     group_member_id = session[:group_member_ids]&.dig(@group.id.to_s)
 
     if group_member_id
-      redirect_to group_path(
-        @group,
-        group_member_id: group_member_id
-      )
+      group_member = @group.group_members.find_by(id: group_member_id)
+
+      if group_member && !group_member.organizer?
+        redirect_to group_path(
+          @group,
+          group_member_id: group_member.id
+        )
+      end
     end
   end
 
@@ -73,6 +81,12 @@ class GroupsController < ApplicationController
 
   def invitation
     @group = Group.find(params[:group_id])
+
+    unless @group.creator == current_user
+      redirect_to join_group_path(@group.invite_token)
+      return
+    end
+
     @group_member = @group.group_members.find_by!(role: "organizer")
   end
 

@@ -71,6 +71,9 @@
             group_ranking_path(
               @group,
               group_member_id: @group_member.id
-            ) %>
+            ),
+            class: "button-secondary" %>
 
-<%= link_to "グループ一覧", groups_path %>
+<p style="margin-top: 24px;">
+  <%= link_to "グループ一覧", groups_path %>
+</p>
