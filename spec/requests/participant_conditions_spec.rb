@@ -28,9 +28,9 @@ RSpec.describe "ParticipantConditions", type: :request do
       post create_participant_condition_path(group, group_member),
         params: {
           budget: 3000,
-          genre_ids: [group_genre.id],
-          area_ids: [group_area.id],
-          avoid_condition_ids: [group_avoid_condition.id]
+          genre_ids: [ group_genre.id ],
+          area_ids: [ group_area.id ],
+          avoid_condition_ids: [ group_avoid_condition.id ]
         }
 
       expect(response).to redirect_to(
