@@ -40,6 +40,15 @@ class RankingsController < ApplicationController
   def score
     @group = Group.find(params[:group_id])
     @group_member = @group.group_members.find(params[:group_member_id])
+
+    unless @group_member.organizer?
+      redirect_to group_ranking_path(
+        @group,
+        group_member_id: @group_member.id
+      ), alert: "スコア詳細は幹事のみ閲覧できます"
+      return
+    end
+
     @restaurant = @group.restaurants.find(params[:restaurant_id])
     @total_score = @restaurant.total_score(@group.group_members)
 
@@ -59,7 +68,7 @@ class RankingsController < ApplicationController
 
       participant_condition &&
         participant_condition.group_genres.include?(@restaurant.group_genre)
-      end
+    end
 
     @genre_reason =
       "#{genre_match_count}人が希望ジャンルと一致"
