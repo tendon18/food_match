@@ -33,23 +33,25 @@
 <% end %>
 
 <script>
-  const areaSelects = document.querySelectorAll(".area-select");
+  document.addEventListener("turbo:load", () => {
+    const areaSelects = document.querySelectorAll(".area-select");
 
-  areaSelects.forEach((select) => {
-    select.addEventListener("change", () => {
-      const selectedValues = Array.from(areaSelects)
-        .map((select) => select.value)
-        .filter((value) => value !== "");
+    areaSelects.forEach((select) => {
+      select.addEventListener("change", () => {
+        const selectedValues = Array.from(areaSelects)
+          .map((select) => select.value)
+          .filter((value) => value !== "");
 
-      areaSelects.forEach((select) => {
-        Array.from(select.options).forEach((option) => {
-          if (option.value === "") {
-            return;
-          }
+        areaSelects.forEach((select) => {
+          Array.from(select.options).forEach((option) => {
+            if (option.value === "") {
+              return;
+            }
 
-          option.disabled =
-            selectedValues.includes(option.value) &&
-            option.value !== select.value;
+            option.disabled =
+              selectedValues.includes(option.value) &&
+              option.value !== select.value;
+          });
         });
       });
     });

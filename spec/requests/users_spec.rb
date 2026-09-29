@@ -18,7 +18,7 @@ RSpec.describe "Users", type: :request do
         }
       }
 
-      expect(response).to redirect_to(new_group_path)
+      expect(response).to redirect_to(new_group_path(from_signup: true))
     end
   end
 end

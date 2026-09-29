@@ -1,6 +1,10 @@
-<h1>登録が完了しました！</h1>
+<% if @from_signup %>
+  <h1>登録が完了しました！</h1>
 
-<p>早速、グループを作成してみましょう。</p>
+  <p>早速、グループを作成してみましょう</p>
+<% else %>
+  <h1>新しいグループを作成する</h1>
+<% end %>
 
 <%= form_with model: @group do |f| %>
   <div>
@@ -15,4 +19,8 @@
   </div>
 
   <%= f.submit "グループを作成する", class: "button" %>
+<% end %>
+
+<% unless @from_signup %>
+  <%= link_to "グループ一覧へ", groups_path %>
 <% end %>

@@ -33,23 +33,25 @@
 <% end %>
 
 <script>
-  const genreSelects = document.querySelectorAll(".genre-select");
+  document.addEventListener("turbo:load", () => {
+    const genreSelects = document.querySelectorAll(".genre-select");
 
-  genreSelects.forEach((select) => {
-    select.addEventListener("change", () => {
-      const selectedValues = Array.from(genreSelects)
-        .map((select) => select.value)
-        .filter((value) => value !== "");
+    genreSelects.forEach((select) => {
+      select.addEventListener("change", () => {
+        const selectedValues = Array.from(genreSelects)
+          .map((select) => select.value)
+          .filter((value) => value !== "");
 
-      genreSelects.forEach((select) => {
-        Array.from(select.options).forEach((option) => {
-          if (option.value === "") {
-            return;
-          }
+        genreSelects.forEach((select) => {
+          Array.from(select.options).forEach((option) => {
+            if (option.value === "") {
+              return;
+            }
 
-          option.disabled =
-            selectedValues.includes(option.value) &&
-            option.value !== select.value;
+            option.disabled =
+              selectedValues.includes(option.value) &&
+              option.value !== select.value;
+          });
         });
       });
     });

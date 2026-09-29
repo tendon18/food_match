@@ -7,6 +7,7 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
+    @from_signup = params[:from_signup]
   end
 
   def create
