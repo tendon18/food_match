@@ -59,9 +59,11 @@ group_avoid_condition_id: group_avoid_condition.id
 
 <% end %>
 
-  <br>
+  <p>
+    分からない項目は「情報なし・判定できない」のままで大丈夫です。
+  </p>
 
-<%= submit_tag "NG条件を保存する" %>
+  <%= submit_tag "NG条件を保存する", class: "button" %>
 <% end %>
 
 <br>
@@ -73,10 +75,6 @@ group_avoid_condition_id: group_avoid_condition.id
                 group_member_id: @group_member.id
               ) %>
 </div>
-
-<p>
-  分からない項目は「情報なし・判定できない」のままで大丈夫です。
-</p>
 
 <p>
   <%= link_to "店舗詳細に戻る",

@@ -14,7 +14,7 @@
 </p>
 
 <p>
-  あなたも気になるお店を<br>
+  <%= @group_member.nickname %>さんも気になるお店を<br>
   1店舗以上追加できます。
 </p>
 
@@ -23,7 +23,12 @@
   先に候補のお店を追加しておきましょう。
 </p>
 
-<%= link_to "候補のお店を追加する",
-            new_restaurant_path(@group, group_member_id: @group_member.id) %>
+<p>
+  <%= link_to "候補のお店を追加する",
+              new_restaurant_path(@group, group_member_id: @group_member.id),
+              class: "button" %>
+</p>
 
-<%= link_to "グループ一覧へ", groups_path %>
+<p>
+  <%= link_to "グループ一覧へ", groups_path %>
+</p>
