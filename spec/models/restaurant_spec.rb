@@ -23,7 +23,7 @@ RSpec.describe Restaurant, type: :model do
         budget: 3000
       )
 
-      expect(restaurant.budget_score([group_member])).to eq(2)
+      expect(restaurant.budget_score([ group_member ])).to eq(2)
     end
 
     it "1人分の予算スコアを計算する" do
@@ -95,7 +95,7 @@ RSpec.describe Restaurant, type: :model do
         budget: 3500
       )
 
-      expect(restaurant.budget_score([group_member])).to eq(-1)
+      expect(restaurant.budget_score([ group_member ])).to eq(-1)
     end
 
     it "予算を1000円超過した場合は2点減点する" do
@@ -119,7 +119,7 @@ RSpec.describe Restaurant, type: :model do
         budget: 4000
       )
 
-      expect(restaurant.budget_score([group_member])).to eq(-2)
+      expect(restaurant.budget_score([ group_member ])).to eq(-2)
     end
 
     it "複数の参加者の予算スコアを合計する" do
@@ -161,7 +161,7 @@ RSpec.describe Restaurant, type: :model do
       )
 
       expect(
-        restaurant.budget_score([group_member_a, group_member_b])
+        restaurant.budget_score([ group_member_a, group_member_b ])
       ).to eq(1)
     end
   end
@@ -198,7 +198,7 @@ RSpec.describe Restaurant, type: :model do
         group_genre: group_genre
       )
 
-      expect(restaurant.genre_score([group_member])).to eq(2)
+      expect(restaurant.genre_score([ group_member ])).to eq(2)
     end
 
     it "1人分のジャンルスコアを計算する" do
@@ -272,7 +272,7 @@ RSpec.describe Restaurant, type: :model do
         group_genre: preferred_genre
       )
 
-      expect(restaurant.genre_score([group_member])).to eq(0)
+      expect(restaurant.genre_score([ group_member ])).to eq(0)
     end
 
     it "希望ジャンルを複数選択していても一致した場合は2点だけ加算する" do
@@ -317,7 +317,7 @@ RSpec.describe Restaurant, type: :model do
         group_genre: preferred_genre
       )
 
-      expect(restaurant.genre_score([group_member])).to eq(2)
+      expect(restaurant.genre_score([ group_member ])).to eq(2)
     end
 
     it "参加者が希望ジャンルを選択していなければ0点" do
@@ -346,7 +346,7 @@ RSpec.describe Restaurant, type: :model do
         group_member: group_member
       )
 
-      expect(restaurant.genre_score([group_member])).to eq(0)
+      expect(restaurant.genre_score([ group_member ])).to eq(0)
     end
 
     it "複数の参加者のジャンルスコアを合計する" do
@@ -407,7 +407,7 @@ RSpec.describe Restaurant, type: :model do
       )
 
       expect(
-        restaurant.genre_score([group_member_a, group_member_b])
+        restaurant.genre_score([ group_member_a, group_member_b ])
       ).to eq(2)
     end
   end
@@ -444,7 +444,7 @@ RSpec.describe Restaurant, type: :model do
         group_area: group_area
       )
 
-      expect(restaurant.area_score([group_member])).to eq(2)
+      expect(restaurant.area_score([ group_member ])).to eq(2)
     end
 
     it "1人分のエリアスコアを計算する" do
@@ -518,7 +518,7 @@ RSpec.describe Restaurant, type: :model do
         group_area: preferred_area
       )
 
-      expect(restaurant.area_score([group_member])).to eq(0)
+      expect(restaurant.area_score([ group_member ])).to eq(0)
     end
 
     it "希望エリアを複数選択していても一致した場合は2点だけ加算する" do
@@ -563,7 +563,7 @@ RSpec.describe Restaurant, type: :model do
         group_area: preferred_area
       )
 
-      expect(restaurant.area_score([group_member])).to eq(2)
+      expect(restaurant.area_score([ group_member ])).to eq(2)
     end
 
     it "参加者が希望エリアを選択していなければ0点" do
@@ -592,7 +592,7 @@ RSpec.describe Restaurant, type: :model do
         group_member: group_member
       )
 
-      expect(restaurant.area_score([group_member])).to eq(0)
+      expect(restaurant.area_score([ group_member ])).to eq(0)
     end
 
     it "複数の参加者のエリアスコアを合計する" do
@@ -653,7 +653,7 @@ RSpec.describe Restaurant, type: :model do
       )
 
       expect(
-        restaurant.area_score([group_member_a, group_member_b])
+        restaurant.area_score([ group_member_a, group_member_b ])
       ).to eq(2)
     end
   end

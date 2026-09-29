@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :require_login, only: [:index, :new, :create]
+  before_action :require_login, only: [ :index, :new, :create ]
 
   def index
     @groups = current_user.groups

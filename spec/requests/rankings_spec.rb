@@ -372,7 +372,7 @@ RSpec.describe "Rankings", type: :request do
       expect(response).to have_http_status(:success)
       expect(response.body).to include("希望エリア「渋谷」と一致")
     end
-    
+
     it "スコア詳細画面にNG条件に該当しない理由を表示する" do
       group = create(:group)
 

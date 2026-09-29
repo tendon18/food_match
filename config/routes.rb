@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   resources :users, only: [ :new, :create ]
   get "/users", to: "users#new"
   resource :session, only: [ :new, :create, :destroy ]
-  resources :password_resets, only: [:new, :create, :edit, :update]
-  resources :groups, only: [:index, :new, :create, :show]
+  resources :password_resets, only: [ :new, :create, :edit, :update ]
+  resources :groups, only: [ :index, :new, :create, :show ]
 
   get "/groups/:group_id/invitation",
     to: "groups#invitation",
@@ -71,7 +71,7 @@ Rails.application.routes.draw do
   get "/groups/:group_id/participant_conditions/:group_member_id/complete",
     to: "participant_conditions#complete",
     as: :participant_condition_complete
-  
+
   # 候補店舗追加画面
   get "/groups/:group_id/restaurants/new",
     to: "restaurants#new",
