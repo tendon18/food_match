@@ -92,6 +92,15 @@
       <% end %>
 
       <div>
+        <%= link_to "候補店舗一覧へ",
+                    group_restaurants_index_path(
+                      @group,
+                      group_member_id: @group_member.id
+                    ),
+                    class: "button-secondary" %>
+      </div>
+
+      <div>
         <%= link_to "グループ一覧へ", groups_path %>
       </div>
 
@@ -124,6 +133,15 @@
 
         <hr>
       <% end %>
+
+      <div>
+        <%= link_to "候補店舗一覧へ",
+                    group_restaurants_index_path(
+                      @group,
+                      group_member_id: @group_member.id
+                    ),
+                    class: "button-secondary" %>
+      </div>
     <% end %>
   <% end %>
 
