@@ -115,6 +115,191 @@ RSpec.describe "Rankings", type: :request do
       expect(response.body).to include(restaurant.name)
       expect(response.body).not_to include("合計スコア：")
     end
+
+    it "合計スコアが高い店舗から順番に表示する" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      high_score_restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "予算内の店舗",
+        budget: 3000
+      )
+
+      low_score_restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "予算超過の店舗",
+        budget: 3500
+      )
+
+      get "/groups/#{group.id}/ranking",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+
+      expect(response.body.index(high_score_restaurant.name))
+        .to be < response.body.index(low_score_restaurant.name)
+    end
+
+    it "参加者のNG条件に該当する店舗はランキングに表示しない" do
+      group = create(:group)
+
+      group_member = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理"
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: participant_condition,
+        group_avoid_condition: group_avoid_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "辛い料理の店舗",
+        budget: 3000
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: group_avoid_condition,
+        status: "applicable"
+      )
+
+      get "/groups/#{group.id}/ranking",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include(restaurant.name)
+    end
+
+
+    it "NG条件がnot_applicableの店舗はランキングに表示する" do
+      group = create(:group)
+      group_member = create(:group_member, group: group, role: "organizer")
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理"
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: participant_condition,
+        group_avoid_condition: group_avoid_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "辛くない店舗",
+        budget: 3000
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: group_avoid_condition,
+        status: "not_applicable"
+      )
+
+      get "/groups/#{group.id}/ranking",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(restaurant.name)
+    end
+
+    it "NG条件がunknownの店舗はランキングに表示する" do
+      group = create(:group)
+      group_member = create(:group_member, group: group, role: "organizer")
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      group_avoid_condition = GroupAvoidCondition.create!(
+        group: group,
+        condition: "辛い料理"
+      )
+
+      participant_condition = ParticipantCondition.create!(
+        group_member: group_member,
+        budget: 3000
+      )
+
+      ParticipantConditionAvoid.create!(
+        participant_condition: participant_condition,
+        group_avoid_condition: group_avoid_condition
+      )
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: group_member,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "確認中の店舗",
+        budget: 3000
+      )
+
+      RestaurantAvoidCondition.create!(
+        restaurant: restaurant,
+        group_avoid_condition: group_avoid_condition,
+        status: "unknown"
+      )
+
+      get "/groups/#{group.id}/ranking",
+        params: { group_member_id: group_member.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(restaurant.name)
+    end
   end
 
   describe "GET /groups/:group_id/restaurants/:restaurant_id/score" do
@@ -970,6 +1155,46 @@ RSpec.describe "Rankings", type: :request do
       expect(response.body).to include("ジャンル：和食")
       expect(response.body).to include("エリア：新宿")
       expect(response.body).to include("避けたい条件：該当なし")
+    end
+
+    it "メンバーはスコア詳細を閲覧できない" do
+      group = create(:group)
+
+      organizer = create(
+        :group_member,
+        group: group,
+        role: "organizer"
+      )
+
+      member = create(
+        :group_member,
+        group: group,
+        role: "member",
+        nickname: "テストメンバー"
+      )
+
+      group_genre = create(:group_genre, group: group)
+      group_area = create(:group_area, group: group)
+
+      restaurant = create(
+        :restaurant,
+        group: group,
+        added_by: organizer,
+        group_genre: group_genre,
+        group_area: group_area,
+        name: "テスト店舗",
+        budget: 3000
+      )
+
+      get "/groups/#{group.id}/restaurants/#{restaurant.id}/score",
+        params: { group_member_id: member.id }
+
+      expect(response).to redirect_to(
+        group_ranking_path(
+          group,
+          group_member_id: member.id
+        )
+      )
     end
   end
 end
