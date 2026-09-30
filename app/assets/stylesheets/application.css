@@ -13,8 +13,8 @@
 }
 
 .restaurant-card:has(input[type="radio"]:checked) {
-  border-color: #4CAF50;
-  background-color: #EAF7EA;
+  border-color: #2563EB;
+  background-color: #EFF6FF;
 }
 
 .restaurant-card-content {
@@ -34,28 +34,28 @@
 
 .button {
   border: none;
-  background-color: #4CAF50;
+  background-color: #2563EB;
   color: white;
 }
 
 .button-secondary {
-  border: 1px solid #4CAF50;
+  border: 1px solid #2563EB;
   background-color: white;
-  color: #4CAF50;
+  color: #2563EB;
 }
 
 .button-danger {
   display: inline-block;
   padding: 6px 10px;
-  border: none;
+  border: 1px solid #B42318;
   border-radius: 5px;
-  background-color: #d9534f;
-  color: white;
+  background-color: white;
+  color: #B42318;
   text-decoration: none;
   cursor: pointer;
 }
 
 .link {
-  color: #4CAF50;
+  color: #2563EB;
   text-decoration: underline;
 }

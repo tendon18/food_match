@@ -75,15 +75,18 @@
   <%= text_area_tag :memo, @restaurant.memo %>
 </div>
 
-<br>
+<p>
+<%= f.submit "変更を保存する", class: "button" %>
+</p>
 
-<%= f.submit "変更を保存する" %>
-
+<p>
 <%= link_to "候補店舗詳細に戻る",
             restaurant_path(
               @group,
               @restaurant,
               group_member_id: @group_member.id
-            ) %>
+            ),
+            class: "button-secondary" %>
+</p>
 
 <% end %>
