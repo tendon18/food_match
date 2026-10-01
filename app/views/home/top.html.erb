@@ -7,19 +7,13 @@
   <%= link_to "新規登録", new_user_path, class: "button" %>
 
   <%= link_to "ログイン", new_session_path, class: "button" %>
-
   
   <div class="terms">
-    <p>グループの利用を開始する前に、以下をご確認ください。</p>
-
-    <label>
-      <%= check_box_tag :terms_and_privacy %>
-      利用規約およびプライバシーポリシーに同意する
-    </label>
-
-    <div class="terms-links">
+    <p>
+      グループの利用を開始する前に、
       <%= link_to "利用規約", pages_terms_path, class: "link" %>
       <%= link_to "プライバシーポリシー", pages_privacy_policy_path, class: "link" %>
-    </div>
+      をご確認ください。
+    </p>
   </div>
 </div>
