@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "pages/terms"
+  get "pages/privacy_policy"
   get "home/top"
   root "home#top"
 
