@@ -20,15 +20,23 @@
     <br>
     <%= f.text_field :nickname %>
     <br><br>
-
-    <%= check_box_tag :terms %>
-    <%= label_tag :terms, "利用規約に同意する" %>
   </div>
 
-  <div>
-    <%= check_box_tag :privacy_policy %>
-    <%= label_tag :privacy_policy, "プライバシーポリシーに同意する" %>
+   <div class="terms">
+    <p>グループの利用を開始する前に、以下をご確認ください。</p>
+
+    <label>
+      <%= check_box_tag :terms_and_privacy %>
+      利用規約およびプライバシーポリシーに同意する
+    </label>
+
+    <div class="terms-links">
+      <%= link_to "利用規約", pages_terms_path, class: "link" %>
+      <%= link_to "プライバシーポリシー", pages_privacy_policy_path, class: "link" %>
+    </div>
   </div>
 
-  <%= f.submit "グループに参加する", class: "button" %>
+  <p>
+    <%= f.submit "グループに参加する", class: "button" %>
+  </p>
 <% end %>
