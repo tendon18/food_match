@@ -1,0 +1,18 @@
+<% if @restaurant.nil? %>
+  <h1>まだお店が決まっていません。</h1>
+
+  <p>
+    幹事（<%= @organizer.nickname %>）さんが店舗を最終決定するまでお待ちください。
+  </p>
+
+  <div>
+    <%= link_to "店舗一覧を見る",
+                group_restaurants_index_path(
+                  @group,
+                  group_member_id: @group_member.id
+                ),
+                class: "button-secondary" %>
+  </div>
+<% else %>
+  <%= render template: "decisions/complete" %>
+<% end %>

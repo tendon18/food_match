@@ -74,14 +74,25 @@
               class: "button-secondary" %>
 </div>
 
-<div style="margin-bottom: 12px;">
-  <%= link_to "ランキングを見る",
-              group_ranking_path(
-                @group,
-                group_member_id: @group_member.id
-              ),
-              class: "button" %>
-</div>
+<% if @group_member.organizer? %>
+  <div style="margin-bottom: 12px;">
+    <%= link_to "ランキングを見る",
+                group_ranking_path(
+                  @group,
+                  group_member_id: @group_member.id
+                ),
+                class: "button" %>
+  </div>
+<% else %>
+  <div style="margin-bottom: 12px;">
+    <%= link_to "決定した店舗を見る",
+                group_decision_status_path(
+                  @group,
+                  group_member_id: @group_member.id
+                  ),
+                  class: "button" %>
+  </div>
+<% end %>
 
 <% if @group_member.organizer? %>
   <div>
