@@ -139,6 +139,11 @@ Rails.application.routes.draw do
     to: "restaurants#update",
     as: :update_restaurant
 
+  # 店舗決定状況
+  get "/groups/:group_id/decision/status",
+    to: "decisions#status",
+    as: :group_decision_status
+
   # 候補店舗削除
   delete "/groups/:group_id/restaurants/:id",
     to: "restaurants#destroy",

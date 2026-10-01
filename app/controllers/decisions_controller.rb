@@ -26,4 +26,14 @@ class DecisionsController < ApplicationController
     @group_member = @group.group_members.find(params[:group_member_id])
     @restaurant = @group.restaurants.find(@group.decided_restaurant_id)
   end
+
+  def status
+    @group = Group.find(params[:group_id])
+    @group_member = @group.group_members.find(params[:group_member_id])
+    @organizer = @group.group_members.find(&:organizer?)
+
+    if @group.decided_restaurant_id
+      @restaurant = @group.restaurants.find(@group.decided_restaurant_id)
+    end
+  end
 end
