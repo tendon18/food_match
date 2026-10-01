@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Restaurants", type: :request do
+  # 候補店舗の新規作成画面の表示
   describe "GET /new" do
     it "returns http success" do
       group = create(:group)
@@ -14,7 +15,7 @@ RSpec.describe "Restaurants", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
-
+  # 候補店舗一覧の表示・権限
   describe "GET /groups/:group_id/restaurants" do
     it "参加者のNG条件に該当する店舗を一覧から除外する" do
       group = create(:group)
@@ -414,7 +415,7 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body).to include("未回答")
     end
   end
-
+  # 候補店舗の新規作成
   describe "POST /groups/:group_id/restaurants" do
     let(:user) { create(:user) }
 
@@ -464,7 +465,7 @@ RSpec.describe "Restaurants", type: :request do
       expect(restaurant.group_area).to eq(group_area)
     end
   end
-
+  # 候補店舗の編集画面の表示・権限
   describe "GET /groups/:group_id/restaurants/:id/edit" do
     it "自分が追加した候補店舗の編集画面を表示できる" do
       group = create(:group)
@@ -532,7 +533,7 @@ RSpec.describe "Restaurants", type: :request do
       )
     end
   end
-
+  # 候補店舗の更新・権限
   describe "PATCH /groups/:group_id/restaurants/:id" do
     it "編集した内容を保存できる" do
       group = create(:group)
@@ -635,7 +636,7 @@ RSpec.describe "Restaurants", type: :request do
       expect(restaurant.budget).to eq(3000)
     end
   end
-
+  # 候補店舗詳細画面の表示・編集後の反映・追加完了
   describe "GET /groups/:group_id/restaurants/:id" do
     it "編集後の内容が候補店舗詳細画面に反映される" do
       group = create(:group)
@@ -710,7 +711,7 @@ RSpec.describe "Restaurants", type: :request do
       expect(response.body).to include("候補店舗の追加を完了する")
     end
   end
-
+  # 候補店舗の追加完了
   describe "PATCH /groups/:group_id/restaurants/submission_complete" do
     it "候補店舗の追加完了にできる" do
       group = create(:group)
@@ -756,7 +757,7 @@ RSpec.describe "Restaurants", type: :request do
       expect(other_group_member.reload.restaurant_submission_completed).to eq(false)
     end
   end
-
+  # 候補店舗の削除・権限
   describe "DELETE /groups/:group_id/restaurants/:id" do
     it "自分が追加した候補店舗を削除できる" do
       group = create(:group)
@@ -835,7 +836,7 @@ RSpec.describe "Restaurants", type: :request do
       )
     end
   end
-
+  # 削除済み候補店舗へのアクセス
   describe "GET /groups/:group_id/restaurants/:id" do
     it "削除済みの候補店舗にアクセスすると一覧画面へ戻る" do
       group = create(:group)

@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Rankings", type: :request do
+  # ランキング画面の表示・並び順・NG条件による除外
   describe "GET /groups/:group_id/ranking" do
     it "returns http success" do
       group = create(:group)
@@ -303,6 +304,7 @@ RSpec.describe "Rankings", type: :request do
   end
 
   describe "GET /groups/:group_id/restaurants/:restaurant_id/score" do
+    # スコア詳細画面の表示・スコア理由・権限
     it "スコア詳細画面を表示する" do
       group = create(:group)
 
