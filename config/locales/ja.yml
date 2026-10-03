@@ -5,7 +5,14 @@ ja:
         email: "メールアドレス"
         password: "パスワード"
         password_confirmation: "パスワード(確認)"
+    errors:
+      models:
+        user:
+          attributes:
+            password_confirmation:
+              confirmation: "パスワードが一致しません"
   errors:
     messages:
       blank: "を入力してください"
       taken: "はすでに登録されています"
+      confirmation: "パスワードが一致しません"

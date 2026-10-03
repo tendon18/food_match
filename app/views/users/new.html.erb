@@ -1,8 +1,14 @@
 <h1>新規登録</h1>
 
 <div style="color: red;">
-  <% @user.errors.full_messages.each do |message| %>
-    <div><%= message %></div>
+  <% @user.errors.each do |error| %>
+    <div>
+      <% if error.attribute == :password_confirmation %>
+        <%= error.message %>
+      <% else %>
+        <%= error.full_message %>
+      <% end %>
+    </div>
   <% end %>
 </div>
 
