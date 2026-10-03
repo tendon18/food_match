@@ -3,7 +3,9 @@ class User < ApplicationRecord
 
   attr_accessor :password_confirmation
   validates :password, presence: true, on: :create
-  validates :password, confirmation: true
+  validates :password, confirmation: {
+    message: "パスワードが一致しません"
+  }
   validates :email, presence: true, uniqueness: true
 
   has_many :created_groups,
